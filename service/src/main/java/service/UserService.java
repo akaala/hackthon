@@ -51,6 +51,7 @@ public class UserService {
 		String[] birth = { "1981－1985", "1986-1990", "1991-1995", "1996-2000" };
 		String[] gender = { "男", "女" };
 		String[] income = { "10万以下", "10-20万", "20-30万", "30万以上" };
+		String[] tags = { "红二代", "富二代", "不差钱", "抠门", "网购达人", "情侣酒店爱好者", "飞行达人" };
 		Random random = new Random();
 		for (int i = 0; i < INIT_USER_DATA_SIZE; i++) {
 			User user = new User();
@@ -61,6 +62,9 @@ public class UserService {
 			user.setBidReturnTimes(random.nextInt(user.getBidTimes()));
 			user.setIncome(income[random.nextInt(income.length)]);
 			user.setUserid(id.incrementAndGet());
+			for (int j = 0; j < 5; j++) {
+				user.getTags().put(tags[random.nextInt(tags.length)], random.nextInt(10));
+			}
 			userMap.put(user.getUserid(), user);
 		}
 	}

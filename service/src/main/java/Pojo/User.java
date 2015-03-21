@@ -1,5 +1,8 @@
 package Pojo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class User {
@@ -12,6 +15,8 @@ public class User {
 	private String birth;
 
 	private String income;
+
+	private Map<String, Integer> tags = new HashMap<>();
 
 	private int bidTimes;
 
@@ -75,5 +80,13 @@ public class User {
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public Map<String, Integer> getTags() {
+		return tags;
+	}
+
+	public void setTags(Map<String, Integer> tags) {
+		this.tags = tags;
 	}
 }

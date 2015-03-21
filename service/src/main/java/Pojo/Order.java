@@ -28,7 +28,7 @@ public class Order {
 
 	private Date dealTime;
 
-	// "inprogress", "addprice", "done";
+	// "inbid", "extrabid", "done";
 	private OrderStatus status;
 
 	// viewed list;
