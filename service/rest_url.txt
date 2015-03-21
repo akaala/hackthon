@@ -20,7 +20,7 @@ user/orders?userid=1
 返回：该userid的所有订单状态(如成功，失败，竞拍中等等)
 
 酒店查看所有order：
-hotel/orders?hotelid=1
+10.16.52.103:4567/hotel/orders?hotelid=1
 返回：所有可抢的order
 
 用户查看单个竞拍中的订单：
