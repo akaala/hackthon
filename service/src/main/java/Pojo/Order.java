@@ -1,6 +1,8 @@
 package Pojo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +26,43 @@ public class Order {
 	private String status;
 
 	// viewed list;
-	private List<Hotel> viewedList;
+	private Map<Integer, Hotel> viewedList = new HashMap<>();
 
 	// bid list:
-	private Map<Integer /* hotelid */, Integer /* price */> bidMap;
+	private Map<Integer /* hotelid */, List<HotelBidRequest> /* price */> bidMap = new HashMap<>();
 
 	private HotelRequest orderRequest;
+	
+	private HotelBidRequest winningBid;
+	
+	private HotelBidRequest bestLosingBid;
+	
+	// unacked within 1min
+	private boolean dead = false;
+	
+	public boolean isDead() {
+		return dead;
+	}
+
+	public void setDead(boolean dead) {
+		this.dead = dead;
+	}
+
+	public HotelBidRequest getBestLosingBid() {
+		return bestLosingBid;
+	}
+
+	public void setBestLosingBid(HotelBidRequest bestLosingBid) {
+		this.bestLosingBid = bestLosingBid;
+	}
+
+	public HotelBidRequest getWinningBid() {
+		return winningBid;
+	}
+
+	public void setWinningBid(HotelBidRequest winningBid) {
+		this.winningBid = winningBid;
+	}
 
 	public HotelRequest getHotelRequest() {
 		return orderRequest;
@@ -79,19 +112,27 @@ public class Order {
 		this.status = status;
 	}
 
-	public List<Hotel> getViewedList() {
+	public Map<Integer, Hotel> getViewedList() {
 		return viewedList;
 	}
 
-	public void setViewedList(List<Hotel> viewedList) {
+	public void setViewedList(Map<Integer, Hotel> viewedList) {
 		this.viewedList = viewedList;
 	}
 
-	public Map<Integer, Integer> getBidMap() {
+	public void addHotelBidRequest(HotelBidRequest request) {
+		if (!bidMap.containsKey(request.getHotelId())) {
+			bidMap.put(request.getHotelId(), new ArrayList<HotelBidRequest>());
+		}
+		List<HotelBidRequest> list = bidMap.get(request.getHotelId());
+		list.add(request);
+	}
+
+	public Map<Integer, List<HotelBidRequest>> getBidMap() {
 		return bidMap;
 	}
 
-	public void setBidMap(Map<Integer, Integer> bidMap) {
+	public void setBidMap(Map<Integer, List<HotelBidRequest>> bidMap) {
 		this.bidMap = bidMap;
 	}
 
@@ -103,8 +144,21 @@ public class Order {
 		this.dealPrice = dealPrice;
 	}
 
-	public String toString(){
+	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
-	
+
+	public boolean isTimeout() {
+		return System.currentTimeMillis() > createTime.getTime() + expiretime * 60L * 1000;
+	}
+
+	public boolean isDone() {
+		return winningBid != null || bestLosingBid != null;
+	}
+
+	public boolean shouldDead() {
+		// dead 1min after timeout
+	   return System.currentTimeMillis() > createTime.getTime() + expiretime * 60L * 1000 + 60 *1000;
+   }
+
 }
