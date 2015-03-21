@@ -10,31 +10,52 @@
     <script src="lib/jquery-1.11.0.js"></script>
     <script src="js/data-load.js"></script>
     <script src="js/modules.js"></script>
-    <script src="js/student-list.js"></script>
+    <script src="js/mobile.js"></script>
 </head>
 <body>
 <div class="container-fluid middle-font" ng-controller="MobileController">
-    <div style="background: dodgerblue; color:white; text-align: center" >
+    <div class="row line-separator" style="background: dodgerblue; color:white; text-align: center" >
         酒店竞标
     </div>
-    <div class="row">
-       <div class="col-xs-4">
+    <div class="row line-separator">
+       <div class="col-xs-5">
                <input type="text" class="form-control middle-font middle-line" id="start-time" placeholder="2015-3-21"
                       style="color:black; border:none;">
         </div>
         <div class="col-xs-1">
             <span>&gt;</span>
         </div>
-        <div class="col-xs-4">
+        <div class="col-xs-5">
             <input type="text" class="form-control middle-font middle-line" id="end-time" placeholder="2015-3-25"
                    style="color:black; border:none;">
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-4">
-            <select ng-model="selected" ng-options="m for m in locations">
+    <div class="row line-separator">
+        <div class="col-xs-12">
+            <select class="no-border" ng-model="location" ng-options="m for m in locations" style="width: 100%">
+                <option value=""> -- 请选择 --</option>
+            </select>
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-12">
+            <select class="no-border" ng-model="level" ng-options="l for l in levels" style="width: 100%">
                 <option value="">-- 请选择 --</option>
             </select>
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-12">
+            竞标有效期：
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-12">
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==3]" ng-click="expire=3">3小时</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==6]" ng-click="expire=6">6小时</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==12]" ng-click="expire=12">12小时</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==24]" ng-click="expire=24">1天</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==72]" ng-click="expire=72">3天</button>
         </div>
     </div>
 </div>
