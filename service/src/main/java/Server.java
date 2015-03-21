@@ -68,14 +68,26 @@ public class Server {
 			int extra = Integer.valueOf(req.queryParams("extra"));
 			String comment = req.queryParams("comment");
 
+			Hotel hotel = hotelService.getHotelById(hotelId);
+			
 			HotelBidRequest request = new HotelBidRequest();
 			request.setComment(comment);
 			request.setExtraPrice(extra);
 			request.setCreateDate(new Date());
-			request.setHotelId(hotelId);
+			request.setHotel(hotel);
 			Order order = orderService.getOrder(orderId);
 			HotelBidRequest hotelBid = orderService.hotelBid(request, order);
 			return JSON.toJSON(hotelBid);
+		});
+
+		/**
+		 * Input: orderid Output: Order
+		 */
+		spark.Spark.get("/order/confirm", (req, res) -> {
+			int orderId = Integer.valueOf(req.queryParams("orderid"));
+			int hotelBidId = Integer.valueOf(req.queryParams("hotelbidid"));
+			Order order = orderService.confirmOrderBid(orderId, hotelBidId);
+			return JSON.toJSON(order);
 		});
 
 		// show bid history and 概率
@@ -106,15 +118,6 @@ public class Server {
 		});
 
 		/**
-		 * Input: Orderid Output: Order ： 主要用于竞拍页面，有哪些酒店浏览过，竞拍过。
-		 */
-		spark.Spark.get("/order/:orderid", (req, res) -> {
-			int orderId = Integer.valueOf(req.params(":orderid"));
-			Order order = orderService.getOrder(orderId);
-			return JSON.toJSON(order);
-		});
-
-		/**
 		 * Input: hotelid Output: List<Order>
 		 */
 		// hotel to check all his bids.
@@ -125,24 +128,12 @@ public class Server {
 			return JSON.toJSON(orders);
 		});
 
-	    spark.Spark.get("/hotel/get", (req, res) -> {
-		    int hotelId = Integer.valueOf(req.queryParams("hotelid"));
-		    int orderId = Integer.valueOf(req.queryParams("orderid"));
-				//todo
-		    return null;
-	    });
-
-	/*	*//**
-		 * Input: orderid Output: Order
-		 *//*
-        spark.Spark.get("/hotel/add", (req, res) -> {
-			int orderId = Integer.valueOf(req.params("orderid"));
-			return orderService.getDoneOrder(orderId);
-		});*/
-		spark.Spark.get("/order/done/:orderid", (req, res) -> {
+		/**
+		 * Input: Orderid Output: Order ： 主要用于竞拍页面，有哪些酒店浏览过，竞拍过。
+		 */
+		spark.Spark.get("/order/:orderid", (req, res) -> {
 			int orderId = Integer.valueOf(req.params(":orderid"));
-			int hotelBidId = Integer.valueOf(req.params(":hotelBidId"));
-			Order order = orderService.confirmOrderBid(orderId, hotelBidId);
+			Order order = orderService.getOrder(orderId);
 			return JSON.toJSON(order);
 		});
 
@@ -157,5 +148,6 @@ public class Server {
 			Hotel hotel = hotelService.getHotelById(hotelId);
 			return JSON.toJSON(hotel);
 		});
+
 	}
 }

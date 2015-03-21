@@ -44,7 +44,7 @@ public class SystemTest {
 			request.setComment("我要我要我要");
 			request.setCreateDate(new Date());
 			request.setExtraPrice(5);
-			request.setHotelId(hotel.getHotelid());
+			request.setHotel(hotel);
 			orderService.hotelBid(request, orders.get(0));
 		}
 

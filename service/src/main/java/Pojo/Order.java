@@ -59,6 +59,7 @@ public class Order {
 		this.winningBid = winningBid;
 		this.dealPrice = this.getHotelRequest().getPrice() + winningBid.getExtraPrice();
 		this.dealTime = new Date();
+		this.status = OrderStatus.done;
 	}
 
 	public UserBidRequest getHotelRequest() {
@@ -118,10 +119,10 @@ public class Order {
 	}
 
 	public void addHotelBidRequest(HotelBidRequest request) {
-		if (!bidMap.containsKey(request.getHotelId())) {
-			bidMap.put(request.getHotelId(), new ArrayList<HotelBidRequest>());
+		if (!bidMap.containsKey(request.getHotel().getHotelid())) {
+			bidMap.put(request.getHotel().getHotelid(), new ArrayList<HotelBidRequest>());
 		}
-		List<HotelBidRequest> list = bidMap.get(request.getHotelId());
+		List<HotelBidRequest> list = bidMap.get(request.getHotel().getHotelid());
 		list.add(request);
 	}
 
