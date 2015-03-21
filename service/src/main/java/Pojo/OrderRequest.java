@@ -1,13 +1,15 @@
 package Pojo;
 
 public class OrderRequest {
-	int price;
+	private int price;
 
-	int star;
+	// 1, 2, 3, 4, 5
+	private int star;
 
-	String type;
+	// 经济型，商务型，度假型
+	private String type;
 
-	String place;
+	private String location;
 
 	public int getPrice() {
 		return price;
@@ -33,11 +35,11 @@ public class OrderRequest {
 		this.type = type;
 	}
 
-	public String getPlace() {
-		return place;
+	public String getLocation() {
+		return location;
 	}
 
-	public void setPlace(String place) {
-		this.place = place;
+	public void setLocation(String place) {
+		this.location = place;
 	}
 }
