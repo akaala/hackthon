@@ -1,6 +1,9 @@
 /**
  * Created by hyj on 15-3-21.
  */
+var RESTFUL_API = "http://10.16.52.103:4567";
+var USER_ID = Math.floor((Math.random() * 10) % 5 + 1)
+
 mobileModule.controller('RootController', function ($rootScope, $scope, $http) {
     $rootScope.page = "newOrder";
 });
@@ -14,7 +17,21 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
 
     $scope.refreshBidRange = function()
     {
+        // http://10.16.52.103:4567/order/probability?userid=1&star=5&place=%E4%B8%8A%E6%B5%B7-%E6%B5%A6%E4%B8%9C&type=1&timeout=60
         console.log("refersh bid range. location: ", $scope.location);
+        $http.get(RESTFUL_API + "/order/probability",
+        {
+            params:
+            {
+                userid: USER_ID,
+                star: $scope.star.id,
+                place: $scope.location,
+                type: $scope.type,
+                timeout: $scope.expire
+            }
+        }).success(function(data) {
+            console.log("result of refresh bid range: ", data);
+        });
     }
 
     $scope.init = function() {
