@@ -12,6 +12,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Created by Administrator on 2015-3-21.
  */
 public class Order {
+	public enum OrderStatus {
+		inbid, extrabid, done
+	}
+
 	private int orderid;
 
 	private User user;
@@ -22,8 +26,10 @@ public class Order {
 
 	private int dealPrice; // 成交价
 
+	private Date dealTime;
+
 	// "inprogress", "addprice", "done";
-	private String status;
+	private OrderStatus status;
 
 	// viewed list;
 	private Map<Integer, Hotel> viewedList = new HashMap<>();
@@ -32,21 +38,10 @@ public class Order {
 	private Map<Integer /* hotelid */, List<HotelBidRequest> /* price */> bidMap = new HashMap<>();
 
 	private HotelRequest orderRequest;
-	
-	private HotelBidRequest winningBid;
-	
-	private HotelBidRequest bestLosingBid;
-	
-	// unacked within 1min
-	private boolean dead = false;
-	
-	public boolean isDead() {
-		return dead;
-	}
 
-	public void setDead(boolean dead) {
-		this.dead = dead;
-	}
+	private HotelBidRequest winningBid;
+
+	private HotelBidRequest bestLosingBid;
 
 	public HotelBidRequest getBestLosingBid() {
 		return bestLosingBid;
@@ -104,11 +99,11 @@ public class Order {
 		this.expiretime = expiretime;
 	}
 
-	public String getStatus() {
+	public OrderStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
 
@@ -126,6 +121,17 @@ public class Order {
 		}
 		List<HotelBidRequest> list = bidMap.get(request.getHotelId());
 		list.add(request);
+	}
+
+	public HotelBidRequest getHotelBidRequest(int hotelBidId) {
+		for (List<HotelBidRequest> list : bidMap.values()) {
+			for (HotelBidRequest bidRequest : list) {
+				if (bidRequest.getBidId() == hotelBidId) {
+					return bidRequest;
+				}
+			}
+		}
+		return null;
 	}
 
 	public Map<Integer, List<HotelBidRequest>> getBidMap() {
@@ -148,17 +154,21 @@ public class Order {
 		return ToStringBuilder.reflectionToString(this);
 	}
 
-	public boolean isTimeout() {
+	public boolean isBidTimeout() {
 		return System.currentTimeMillis() > createTime.getTime() + expiretime * 60L * 1000;
 	}
 
-	public boolean isDone() {
-		return winningBid != null || bestLosingBid != null;
+	public boolean isExtraBidTimeout() {
+		// timeout 1min after normal bid
+		return System.currentTimeMillis() > createTime.getTime() + expiretime * 60L * 1000 + 60 * 1000;
 	}
 
-	public boolean shouldDead() {
-		// dead 1min after timeout
-	   return System.currentTimeMillis() > createTime.getTime() + expiretime * 60L * 1000 + 60 *1000;
-   }
+	public Date getDealTime() {
+		return dealTime;
+	}
+
+	public void setDealTime(Date dealTime) {
+		this.dealTime = dealTime;
+	}
 
 }

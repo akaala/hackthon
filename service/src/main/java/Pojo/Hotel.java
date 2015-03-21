@@ -8,7 +8,7 @@ public class Hotel {
 
 	private String name;
 
-	private int star;
+	private Integer star;
 
 	private String type;
 
@@ -30,7 +30,7 @@ public class Hotel {
 		this.name = name;
 	}
 
-	public int getStar() {
+	public Integer getStar() {
 		return star;
 	}
 

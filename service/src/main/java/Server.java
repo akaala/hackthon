@@ -109,5 +109,10 @@ public class Server {
 			int orderId = Integer.valueOf(req.params("orderid"));
 			return orderService.getDoneOrder(orderId);
 		});*/
+        spark.Spark.get("/order/done/:orderid", (req, res) -> {
+			int orderId = Integer.valueOf(req.params(":orderid"));
+			int hotelBidId = Integer.valueOf(req.params(":hotelBidId"));
+			return orderService.confirmOrderBid(orderId, hotelBidId);
+		});
 	}
 }

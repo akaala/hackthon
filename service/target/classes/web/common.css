@@ -1,7 +1,19 @@
+.page-title {
+    background: dodgerblue; color:white; text-align: center
+}
+
 .middle-font {
     font-size: 40px
 }
 
 .middle-line {
     height: 60px
+}
+
+.line-separator {
+    border-bottom: lightgrey 1px solid;
+}
+
+.no-border {
+    border:none
 }
