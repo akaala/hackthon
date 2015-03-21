@@ -1,6 +1,9 @@
+import Pojo.Hotel;
+import Pojo.Order;
 import com.alibaba.fastjson.JSON;
 
 import Pojo.User;
+import service.OrderService;
 
 import java.util.ArrayList;
 
@@ -9,6 +12,7 @@ import static spark.Spark.post;
 
 public class Server {
     public static void main(String[] args) {
+        OrderService orderService = new OrderService();
         User user = new User();
 
         String userS = JSON.toJSONString(user);
@@ -25,9 +29,23 @@ public class Server {
          * Output: OrderID or null(means failed)
          */
         get("/order/buy", (req, res) -> {
-                    String price = req.queryParams("price");
-                    return null;
-                }
+                    int userId = Integer.valueOf(req.queryParams("userId"));
+                    int price = Integer.valueOf(req.queryParams("price"));
+                    int star = Integer.valueOf(req.queryParams("start"));
+                    String place = req.queryParams("place");
+                    String type = req.queryParams("type");
+
+                    Order order = new Order();
+                    order.setUser(userService.getUser(userId));
+                    order.setPrice(price);
+                    order.setStar(star);
+                    order.setType(type);
+                    order.setPlace();
+
+
+
+return                      orderService.buy(order);
+            }
         );
 
         // show bid history and 概率
@@ -44,7 +62,7 @@ public class Server {
          * Input: UserID
          * Output: List<Order>
          */
-        get("/Order/:userid/history", (req, res) -> {
+        get("/order/:userid/history", (req, res) -> {
             return "all user bid history";
         });
 
