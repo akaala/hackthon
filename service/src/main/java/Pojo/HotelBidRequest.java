@@ -5,6 +5,8 @@ import java.util.Date;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class HotelBidRequest {
+	private int bidId;
+	
 	private int hotelId;
 	
 	private int extraPrice;
@@ -51,5 +53,13 @@ public class HotelBidRequest {
 
 	public boolean satify(Order order) {
 	   return extraPrice == 0;
+   }
+
+	public int getBidId() {
+	   return bidId;
+   }
+
+	public void setBidId(int bidId) {
+	   this.bidId = bidId;
    }
 }
