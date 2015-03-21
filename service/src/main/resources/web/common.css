@@ -3,11 +3,15 @@
 }
 
 .middle-font {
-    font-size: 40px
+    font-size: 30px
+}
+
+.row {
+    height: 80px
 }
 
 .middle-line {
-    height: 60px
+    height: 80px
 }
 
 .line-separator {
@@ -16,4 +20,8 @@
 
 .no-border {
     border:none
+}
+
+.yellow {
+    color: goldenrod;
 }
