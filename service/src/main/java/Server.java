@@ -8,6 +8,7 @@ import service.PriceService;
 import service.UserService;
 
 import java.util.Date;
+import java.util.List;
 
 import service.BidService;
 import service.HotelService;
@@ -16,8 +17,11 @@ import service.UserService;
 import Pojo.Hotel;
 import Pojo.HotelBidRequest;
 import Pojo.Order;
+import Pojo.PricePoint;
 import Pojo.User;
 import Pojo.UserBidRequest;
+
+import com.alibaba.fastjson.JSON;
 
 public class Server {
 	public static void main(String[] args) {
@@ -54,7 +58,8 @@ public class Server {
 			// put into userToOrderHistory
 			   userService.addUserOrder(userId, order);
 
-			   return orderService.userBid(order);
+			   order = orderService.userBid(order);
+			   return JSON.toJSON(order);
 		   });
 
 		spark.Spark.get("/order/hotelbid", (req, res) -> {
@@ -69,7 +74,8 @@ public class Server {
 			request.setCreateDate(new Date());
 			request.setHotelId(hotelId);
 			Order order = orderService.getOrder(orderId);
-			return orderService.hotelBid(request, order);
+			HotelBidRequest hotelBid = orderService.hotelBid(request, order);
+			return JSON.toJSON(hotelBid);
 		});
 
 		// show bid history and 概率
@@ -85,8 +91,9 @@ public class Server {
 
 			   int timeoutMin = Integer.valueOf(req.queryParams("timeout"));
 
-	        double normalPrice = service.getNormalPrice(request);
-	        return JSON.toJSON(service.getPricePoint(normalPrice, timeoutMin , new Date()));
+			   double normalPrice = service.getNormalPrice(request);
+			   List<PricePoint> prices = service.getPricePoint(normalPrice, timeoutMin, new Date());
+			   return JSON.toJSON(prices);
 		   });
 
 		/**
@@ -94,7 +101,8 @@ public class Server {
 		 */
 		spark.Spark.get("/user/orders", (req, res) -> {
 			int userId = Integer.valueOf(req.queryParams("userid"));
-			return userService.getUserOrders(userId);
+			List<Order> orders = userService.getUserOrders(userId);
+			return JSON.toJSON(orders);
 		});
 
 		/**
@@ -102,7 +110,8 @@ public class Server {
 		 */
 		spark.Spark.get("/order/:orderid", (req, res) -> {
 			int orderId = Integer.valueOf(req.params(":orderid"));
-			return orderService.getOrder(orderId);
+			Order order = orderService.getOrder(orderId);
+			return JSON.toJSON(order);
 		});
 
 		/**
@@ -112,7 +121,8 @@ public class Server {
 		spark.Spark.get("/hotel/orders", (req, res) -> {
 			int hotelId = Integer.valueOf(req.queryParams("hotelid"));
 
-			return orderService.getMatchedOrders(hotelId);
+			List<Order> orders = orderService.getMatchedOrders(hotelId);
+			return JSON.toJSON(orders);
 		});
 
 	    spark.Spark.get("/hotel/get", (req, res) -> {
@@ -132,19 +142,20 @@ public class Server {
 		spark.Spark.get("/order/done/:orderid", (req, res) -> {
 			int orderId = Integer.valueOf(req.params(":orderid"));
 			int hotelBidId = Integer.valueOf(req.params(":hotelBidId"));
-			return orderService.confirmOrderBid(orderId, hotelBidId);
+			Order order = orderService.confirmOrderBid(orderId, hotelBidId);
+			return JSON.toJSON(order);
 		});
 
 		spark.Spark.get("/user/:userid", (req, res) -> {
 			int userId = Integer.valueOf(req.params(":userid"));
 			User user = userService.getUserById(userId);
-			return user;
+			return JSON.toJSON(user);
 		});
 
 		spark.Spark.get("/hotel/:hotelid", (req, res) -> {
 			int hotelId = Integer.valueOf(req.params(":hotelid"));
 			Hotel hotel = hotelService.getHotelById(hotelId);
-			return hotel;
+			return JSON.toJSON(hotel);
 		});
 	}
 }
