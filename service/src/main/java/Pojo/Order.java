@@ -16,6 +16,8 @@ public class Order {
 
 	private int expiretime; // in minutes
 
+	private int dealPrice; // 成交价
+
 	// "inprogress", "addprice", "done";
 	private String status;
 
@@ -89,6 +91,14 @@ public class Order {
 
 	public void setBidMap(Map<Integer, Integer> bidMap) {
 		this.bidMap = bidMap;
+	}
+
+	public int getDealPrice() {
+		return dealPrice;
+	}
+
+	public void setDealPrice(int dealPrice) {
+		this.dealPrice = dealPrice;
 	}
 
 }

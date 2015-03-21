@@ -1,10 +1,5 @@
-import Pojo.Hotel;
 import Pojo.Order;
 import Pojo.OrderRequest;
-
-import com.alibaba.fastjson.JSON;
-
-import Pojo.User;
 
 import com.google.common.collect.ArrayListMultimap;
 
@@ -12,12 +7,10 @@ import service.HotelService;
 import service.OrderService;
 import service.UserService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static spark.Spark.get;
-import static spark.Spark.post;
 import static spark.Spark.staticFileLocation;
 
 public class Server {
@@ -49,7 +42,7 @@ public class Server {
 			request.setPrice(price);
 			request.setStar(star);
 			request.setType(type);
-			request.setPlace(place);
+			request.setLocation(place);
 			order.setOrderRequest(request);
 
 			// put into userToOrderHistory

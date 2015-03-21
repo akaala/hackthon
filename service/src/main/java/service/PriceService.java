@@ -1,4 +1,5 @@
 package service;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,9 +8,25 @@ import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.RealDistribution;
 
+import Pojo.OrderRequest;
 import Pojo.PricePoint;
 
 public class PriceService {
+
+	public double getNormalPrice(OrderRequest request) {
+		double base = request.getStar() * 200;
+		switch (request.getType()) {
+		case "商务型":
+			return base * 1.2;
+		case "经济型":
+			return base * 0.8;
+		case "度假型":
+			return base;
+		default:
+			return base;
+		}
+	}
+
 	public List<PricePoint> getPricePoint(double normalPrice, int timeout, Date currentDate) {
 		RealDistribution distribution = getDistribution(timeout, currentDate);
 		List<PricePoint> result = new ArrayList<PricePoint>();
