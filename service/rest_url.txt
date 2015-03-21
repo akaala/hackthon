@@ -22,7 +22,7 @@ http://10.16.52.103:4567/order/buy?userid=1&price=300&star=5&place=上海-浦东
 
 
 酒店查看所有order：
-/hotel/orderlist?hotelid=205
+10.16.52.103:4567/hotel/orderlist?hotelid=1
 返回：所有可抢的order
 
 酒店抢单:

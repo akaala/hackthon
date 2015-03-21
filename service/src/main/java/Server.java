@@ -92,7 +92,7 @@ public class Server {
         spark.Spark.get("/hotel/orderlist", (req, res) -> {
 			int hotelId = Integer.valueOf(req.queryParams("hotelid"));
 
-	         return orderService.getOrderList(hotelId);
+	         return JSON.toJSON(orderService.getOrderList(hotelId));
 		});
 
 	    spark.Spark.get("/hotel/get", (req, res) -> {
