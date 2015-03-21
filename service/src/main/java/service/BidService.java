@@ -12,7 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import Pojo.Hotel;
 import Pojo.HotelBidRequest;
+import Pojo.UserBidRequest;
 import Pojo.Order;
+import Pojo.Order.OrderStatus;
 
 /**
  * Created by Administrator on 2015-3-21.
@@ -20,16 +22,18 @@ import Pojo.Order;
 public class BidService {
 
 	private static Logger log = LoggerFactory.getLogger(BidService.class);
-	
+
 	private static final BidService instance = new BidService();
 
 	public static BidService getInstance() {
 		return instance;
 	}
 
-	private static Map<Integer, Order> orderMap = new HashMap<>();
+	private Map<Integer, Order> orderMap = new HashMap<>();
 
-	static AtomicInteger id = new AtomicInteger(1);
+	private AtomicInteger bidId = new AtomicInteger(1);
+
+	private AtomicInteger hotelBidId = new AtomicInteger(1);
 
 	private BidService() {
 		startBidScanTask();
@@ -41,17 +45,20 @@ public class BidService {
 				while (true) {
 					for (Map.Entry<Integer, Order> entry : orderMap.entrySet()) {
 						Order order = entry.getValue();
-						if (order.isTimeout()) {
-							if (!order.isDead()) {
-								if (order.shouldDead()) {
-									log.info(String.format("%s is dead", order));
-									order.setDead(true);
-								} else {
-									findWinningBid(order);
-									if (order.getWinningBid() == null) {
-										findBestLosingBid(order);
-									}
-								}
+						if (order.getStatus() == OrderStatus.inbid) {
+							if (order.getWinningBid() != null) {
+								order.setStatus(OrderStatus.done);
+								continue;
+							}
+							if (order.isBidTimeout()) {
+								order.setStatus(OrderStatus.extrabid);
+								findBestLosingBid(order);
+								continue;
+							}
+						} else if (order.getStatus() == OrderStatus.extrabid) {
+							if (order.isExtraBidTimeout()) {
+								log.info(String.format("%s is dead", order));
+								order.setStatus(OrderStatus.done);
 							}
 						}
 					}
@@ -91,24 +98,16 @@ public class BidService {
 		}.start();
 	}
 
-	public int userBid(Order order) {
-		int generatedId = generateId();
+	public Order userBid(Order order) {
+		int generatedId = bidId.incrementAndGet();
 		order.setOrderid(generatedId);
 		orderMap.put(generatedId, order);
-		return generatedId;
+		return order;
 	}
 
 	public void hotelBid(HotelBidRequest request, Order order) {
+		request.setBidId(hotelBidId.incrementAndGet());
 		order.addHotelBidRequest(request);
-	}
-
-	private int generateId() {
-		return id.incrementAndGet();
-	}
-
-	public Order getDoneOrder(int orderId) {
-		// todo: get done order by id.
-		return null;
 	}
 
 	public List<Order> getOrderList(int hotelId) {
@@ -116,8 +115,20 @@ public class BidService {
 		HotelService hotelService = HotelService.getInstance();
 		Hotel hotel = hotelService.getHotelById(hotelId);
 		for (Order order : orderMap.values()) {
-			if (order.getHotelRequest().getLocation().equals(hotel.getLocation())
-			      && order.getHotelRequest().getType().equals(hotel.getType())) {
+			UserBidRequest hotelRequest = order.getHotelRequest();
+			boolean isMatchLocation = hotelRequest.getLocation() != null ? true : false;
+			if (!isMatchLocation) {
+				isMatchLocation = hotelRequest.getLocation().equals(hotel.getLocation());
+			}
+			boolean isMatchType = hotelRequest.getType() != null ? true : false;
+			if (!isMatchType) {
+				isMatchType = hotelRequest.getType().equals(hotel.getType());
+			}
+			boolean isMatchStar = hotelRequest.getStar() != null ? true : false;
+			if (!isMatchStar) {
+				isMatchStar = hotelRequest.getStar().equals(hotel.getStar());
+			}
+			if (isMatchLocation && isMatchType && isMatchStar) {
 				result.add(order);
 			}
 		}
@@ -126,5 +137,12 @@ public class BidService {
 
 	public Order getOrder(int orderId) {
 		return orderMap.get(orderId);
+	}
+
+	public Order confirmOrderBid(int orderId, int hotelBidId) {
+		Order order = getOrder(orderId);
+		HotelBidRequest hotelBidRequest = order.getHotelBidRequest(hotelBidId);
+		order.setWinningBid(hotelBidRequest);
+		return order;
 	}
 }

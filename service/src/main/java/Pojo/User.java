@@ -1,5 +1,7 @@
 package Pojo;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class User {
 	private int userid;
 
@@ -69,5 +71,9 @@ public class User {
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

@@ -26,3 +26,4 @@ service/target
 service/.gitignore
 service/.project
 service/.classpath
+/service/.idea

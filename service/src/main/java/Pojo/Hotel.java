@@ -1,5 +1,7 @@
 package Pojo;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * Created by Administrator on 2015-3-21.
  */
@@ -8,11 +10,15 @@ public class Hotel {
 
 	private String name;
 
-	private int star;
+	private Integer star;
 
 	private String type;
 
 	private String location;
+
+	private String lat;
+
+	private String lng;
 
 	public int getHotelid() {
 		return hotelid;
@@ -30,7 +36,7 @@ public class Hotel {
 		this.name = name;
 	}
 
-	public int getStar() {
+	public Integer getStar() {
 		return star;
 	}
 
@@ -52,5 +58,25 @@ public class Hotel {
 
 	public void setLocation(String place) {
 		this.location = place;
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public String getLat() {
+		return lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	public String getLng() {
+		return lng;
+	}
+
+	public void setLng(String lng) {
+		this.lng = lng;
 	}
 }

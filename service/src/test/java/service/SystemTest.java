@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import Pojo.Hotel;
 import Pojo.HotelBidRequest;
-import Pojo.HotelRequest;
+import Pojo.UserBidRequest;
 import Pojo.Order;
 import Pojo.User;
 
@@ -24,7 +24,7 @@ public class SystemTest {
 		order.setCreateTime(new Date());
 		order.setExpiretime(5);
 		order.setUser(user);
-		HotelRequest hotelRequest = new HotelRequest();
+		UserBidRequest hotelRequest = new UserBidRequest();
 		hotelRequest.setLocation("上海-徐家汇");
 		hotelRequest.setStar(3);
 		hotelRequest.setType("经济型");

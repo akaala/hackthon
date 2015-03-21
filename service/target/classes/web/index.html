@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html ng-app="Mobile" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <title>我的酒店我做主</title>
+    <!--link rel="stylesheet" href="css/app.css"-->
+    <link rel="stylesheet" href="lib/bootstrap-3.3.4-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="lib/slider/css/slider.css">
+    <link rel="stylesheet" href="common.css">
+    <script src="lib/angular.js"></script>
+    <script src="lib/jquery-1.11.0.js"></script>
+    <script src="lib/slider/js/bootstrap-slider.js"></script>
+    <script src="js/data-load.js"></script>
+    <script src="js/modules.js"></script>
+    <script src="js/mobile.js"></script>
+</head>
+<body ng-controller="RootController">
+
+<!-- New Order page -->
+<div class="container-fluid middle-font" ng-controller="NewOrderController" ng-if="page=='newOrder'">
+    <div class="row line-separator page-title">
+        创建酒店竞标
+    </div>
+    <div class="row line-separator">
+       <div class="col-xs-5">
+               <input type="text" class="form-control middle-font middle-line" id="start-time" placeholder="2015-3-21"
+                      style="color:black; border:none;" ng-click="refreshBidRange()">
+        </div>
+        <div class="col-xs-1">
+            <span>&gt;</span>
+        </div>
+        <div class="col-xs-5">
+            <input type="text" class="form-control middle-font middle-line" id="end-time" placeholder="2015-3-25"
+                   style="color:black; border:none;" ng-click="refreshBidRange()">
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-12">
+            <select class="no-border" ng-model="location" ng-change="refreshBidRange()" ng-options="m for m in locations" style="width: 100%">
+                <option value=""> -- 请选择 --</option>
+            </select>
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-12">
+            <select class="no-border" ng-model="star" ng-change="refreshBidRange()" ng-options="s.name for s in stars" style="width: 100%">
+                <option value="">-- 请选择 --</option>
+            </select>
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-12">
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[type==1]" ng-click="type=1;refreshBidRange();">经济型</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[type==2]" ng-click="type=2;refreshBidRange();">商旅型</button>
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-12">
+            竞标有效期：
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-12">
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==3]" ng-click="expire=3;refreshBidRange();">3小时</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==6]" ng-click="expire=6;refreshBidRange();">6小时</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==12]" ng-click="expire=12;refreshBidRange();">12小时</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==24]" ng-click="expire=24;refreshBidRange();">1天</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==72]" ng-click="expire=72;refreshBidRange();">3天</button>
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-3">
+            我愿意出价：
+        </div>
+        <div  class="col-xs-6">
+            <div id="price-slider" style="width: 100%">
+                &nbsp;
+            </div>
+        </div>
+        <div class="col-xs-3">
+            {{bidPrice}} 元
+        </div>
+    </div>
+    <div class="row line-separator" style="text-align: center">
+        <button class="btn btn-danger middle-font no-border" ng-click="sendOrder()" style="width:30%">出价</button>
+    </div>
+</div>
+
+<!-- Order list page-->
+<div class="container-fluid middle-font" ng-controller="OrderListController" ng-if="page=='orderList'">
+    <div class="row line-separator page-title"  >
+        竞标历史
+    </div>
+    <div class="row line-separator" ng-options="order for order in orderHistory">
+        <div class="col-xs-3">
+            {{order}}
+        </div>
+        <div class="col-xs-3">
+            {{order.status}}
+        </div>
+        <div class="col-xs-3">
+            {{order.finalPrice}} 元
+        </div>
+        <div class="col-xs-3">
+            {{order.hotelName}}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

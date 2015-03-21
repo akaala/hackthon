@@ -1,10 +1,14 @@
 package Pojo;
 
-public class HotelRequest {
-	private int price;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+public class UserBidRequest {
+	private int requestId;
+
+	private Integer price;
 
 	// 1, 2, 3, 4, 5
-	private int star;
+	private Integer star;
 
 	// 经济型，商务型，度假型
 	private String type;
@@ -19,7 +23,7 @@ public class HotelRequest {
 		this.price = price;
 	}
 
-	public int getStar() {
+	public Integer getStar() {
 		return star;
 	}
 
@@ -41,5 +45,17 @@ public class HotelRequest {
 
 	public void setLocation(String place) {
 		this.location = place;
+	}
+
+	public int getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(int requestId) {
+		this.requestId = requestId;
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }
