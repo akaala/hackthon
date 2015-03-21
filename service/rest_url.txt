@@ -8,29 +8,30 @@ order/userbid?userid=1&price=300&star=5&place=上海-徐家汇&type=商务型&ti
 order/probability?star=5&place=上海-徐汇区&type=商务型&timeout=60
 返回：概率图
 
+酒店抢单:
+order/hotelbid?hotelid=255&orderid=1009&extra=5&comment=FUCK
+返回：
+
+用户确认:
+order/confirm?orderid=1&hotelbidid=2
+
 用户查看他所有订单记录：
 user/orders?userid=1
 返回：该userid的所有订单状态(如成功，失败，竞拍中等等)
-
-
-用户查看单个竞拍中的订单：
-/order/1
-返回：该订单的详细信息（主要是有多少酒店浏览过，出价过，现在的状态）
-
 
 酒店查看所有order：
 hotel/orders?hotelid=1
 返回：所有可抢的order
 
-酒店抢单:
-/order/hotelbid?hotelid=255&orderid=1009&extra=5&comment=FUCK
-返回：(Boolean) success or fail
-
+用户查看单个竞拍中的订单：
+order/1
+返回：该订单的详细信息（主要是有多少酒店浏览过，出价过，现在的状态）
 
 酒店详情：
-／hotel/1
+hotel/1
 
-
+用户详情
+user/1
 
 
 

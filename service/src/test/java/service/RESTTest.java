@@ -72,4 +72,20 @@ public class RESTTest {
 		content = Request.Get(host + "order/1").execute().returnContent();
 		System.out.println(content);
 	}
+
+	@Test
+	public void testUserConfirmBid() throws ClientProtocolException, IOException {
+		int userId = 1;
+		Content content = Request
+		      .Get(host + "order/userbid?userid=" + userId + "&price=300&star=5&place=上海-徐家汇&type=商务型&timeout=5")
+		      .execute().returnContent();
+		System.out.println(content.toString());
+		int hotelid = 1;
+		// Suppose orderid = 1;
+		content = Request.Get(host + "order/hotelbid?hotelid=1&orderid=1&extra=5&comment=FUCK").execute().returnContent();
+		System.out.println(content);
+
+		content = Request.Get(host + "order/confirm?orderid=1&hotelbidid=1").execute().returnContent();
+		System.out.println(content);
+	}
 }

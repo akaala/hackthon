@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class HotelBidRequest {
 	private int bidId;
 	
-	private int hotelId;
+	private Hotel hotel;
 	
 	private int extraPrice;
 
@@ -39,12 +39,12 @@ public class HotelBidRequest {
 		this.createDate = createDate;
 	}
 
-	public int getHotelId() {
-	   return hotelId;
+	public Hotel getHotel() {
+	   return hotel;
    }
 
-	public void setHotelId(int hotelId) {
-	   this.hotelId = hotelId;
+	public void setHotel(Hotel hotel) {
+	   this.hotel = hotel;
    }
 	
 	public String toString(){
