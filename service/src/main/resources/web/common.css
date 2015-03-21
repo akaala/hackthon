@@ -11,11 +11,13 @@
 }
 
 .middle-line {
-    height: 80px
+    height: 80px;
+    padding: 20px 0px 0px 0px
 }
 
 .line-separator {
     border-bottom: lightgrey 1px solid;
+    padding: 20px 0px 0px 0px;
 }
 
 .no-border {
