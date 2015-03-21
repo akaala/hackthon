@@ -14,7 +14,8 @@ public class RESTTest {
 	@Test
 	public void testUserRequestBid() throws ClientProtocolException, IOException {
 		int userId = 1;
-		Content content = Request.Get(host + "order/buy?userid=" + userId + "&price=300&star=5&place=上海-徐家汇&type=商务型")
+		Content content = Request
+		      .Get(host + "order/userbid?userid=" + userId + "&price=300&star=5&place=上海-徐家汇&type=商务型&timeout=5")
 		      .execute().returnContent();
 		System.out.println(content.toString());
 	}
@@ -50,6 +51,25 @@ public class RESTTest {
 	}
 
 	@Test
-	public void testHotelRequestBid() {
+	public void testHotelRequestBid() throws ClientProtocolException, IOException, InterruptedException {
+		int hotelid = 1;
+		Content content = Request.Get(host + "hotel/orders?hotelid=" + hotelid).execute().returnContent();
+		System.out.println(content);
+		// Suppose orderid = 1;
+		content = Request.Get(host + "order/hotelbid?hotelid=1&orderid=1&extra=5&comment=FUCK").execute().returnContent();
+		System.out.println(content);
+
+		content = Request.Get(host + "order/hotelbid?hotelid=1&orderid=1&extra=50&comment=FUCK2").execute()
+		      .returnContent();
+		System.out.println(content);
+
+		content = Request.Get(host + "hotel/orders?hotelid=1").execute().returnContent();
+		System.out.println(content);
+
+		content = Request.Get(host + "order/hotelbid?hotelid=1&orderid=1&extra=0").execute().returnContent();
+		Thread.sleep(1000);
+
+		content = Request.Get(host + "order/1").execute().returnContent();
+		System.out.println(content);
 	}
 }

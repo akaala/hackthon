@@ -36,7 +36,7 @@ public class SystemTest {
 		HotelService hotelService = HotelService.getInstance();
 		int myHotelId = 1;
 		Hotel hotel = hotelService.getHotelById(myHotelId);
-		List<Order> orders = orderService.getOrderList(hotel.getHotelid());
+		List<Order> orders = orderService.getMatchedOrders(hotel.getHotelid());
 		System.out.println(orders);
 
 		if (orders.size() > 0) {
