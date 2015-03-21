@@ -1,11 +1,14 @@
 package service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import Pojo.Order;
 import Pojo.User;
+import com.google.common.collect.ArrayListMultimap;
 
 /**
  * Created by qinf on 2015/3/21.
@@ -22,7 +25,10 @@ public class UserService {
 
 	private Map<Integer, User> userMap = new HashMap<>();
 
-	private AtomicInteger id = new AtomicInteger(1);
+	 ArrayListMultimap<Integer /* userid */, Order> userToOrderHistory = ArrayListMultimap.create();
+
+
+	 private AtomicInteger id = new AtomicInteger(1);
 
 	private UserService() {
 		initData();
@@ -39,6 +45,15 @@ public class UserService {
 		}
 		return user;
 	}
+
+
+	public void addUserOrder(int userId, Order order) {
+		 userToOrderHistory.put(userId, order);
+	}
+
+	 public List<Order> getUserOrders(int userId) {
+		 return userToOrderHistory.get(userId);
+	 }
 
 	private void initData() {
 		String[] userNameArray = { "刘一鸣", "顾庆", "柯圣", "秦峰", "黄弋简" };

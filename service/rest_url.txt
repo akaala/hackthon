@@ -1,18 +1,18 @@
 
 用户确定下订单
 // type:1 经济型,2 商旅型
-/order/buy?userId=1&price=350&star=4&place=浦东&type=1
+http://10.16.52.103:4567/order/buy?userid=1&price=300&star=5&place=上海-浦东&type=1
 返回：该订单的id
 
 
 用户调整订单参数时：
 // type:1 经济型,2 商旅型
-/order/probability?userid=1&price=350&star=4&place=浦东&type=1
+10.16.52.103:4567/order/probability?userid=1&star=5&place=上海-浦东&type=1&timeout=60
 返回：概率图
 
 
 用户查看他所有订单记录：
-/order/history?userid=3:
+10.16.52.103:4567/order/history?userid=1
 返回：该userid的所有订单状态(如成功，失败，竞拍中等等)
 
 
