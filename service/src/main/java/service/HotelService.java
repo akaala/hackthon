@@ -30,19 +30,19 @@ public class HotelService {
 	}
 
 	private void initHotelData() {
-		Hotel hotel = newHotel("如家", 3, "经济型", "上海-徐家汇");
+		Hotel hotel = newHotel("如家", 3, "经济型", "上海-徐家汇", "31.0930", "121.2651");
 		hotelMap.put(hotel.getHotelid(), hotel);
 
-		hotel = newHotel("汉庭", 3, "经济型", "上海-人民广场");
+		hotel = newHotel("汉庭", 3, "经济型", "上海-人民广场", "31.1329", "121.2813");
 		hotelMap.put(hotel.getHotelid(), hotel);
 
-		hotel = newHotel("希尔顿", 5, "商务型", "上海-虹桥");
+		hotel = newHotel("希尔顿", 5, "商务型", "上海-虹桥", "31.1153", "121.2011");
 		hotelMap.put(hotel.getHotelid(), hotel);
 
-		hotel = newHotel("Best Western", 4, "度假型", "上海-徐家汇");
+		hotel = newHotel("Best Western", 4, "度假型", "上海-徐家汇", "31.0940", "121.2661");
 		hotelMap.put(hotel.getHotelid(), hotel);
 
-		hotel = newHotel("皇冠酒店", 5, "商务型", "上海-人民广场");
+		hotel = newHotel("皇冠酒店", 5, "商务型", "上海-人民广场", "31.1339", "121.2824");
 		hotelMap.put(hotel.getHotelid(), hotel);
 	}
 
@@ -58,7 +58,7 @@ public class HotelService {
 	 * @param place
 	 * @return
 	 */
-	private Hotel newHotel(String name, int star, String type, String place) {
+	private Hotel newHotel(String name, int star, String type, String place, String lat, String lng) {
 		Hotel hotel = new Hotel();
 		int id = generatedId();
 		hotel.setHotelid(id);
@@ -66,6 +66,8 @@ public class HotelService {
 		hotel.setName(name);
 		hotel.setStar(star);
 		hotel.setLocation(place);
+		hotel.setLat(lat);
+		hotel.setLng(lng);
 		return hotel;
 	}
 

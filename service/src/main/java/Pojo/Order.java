@@ -57,6 +57,8 @@ public class Order {
 
 	public void setWinningBid(HotelBidRequest winningBid) {
 		this.winningBid = winningBid;
+		this.dealPrice = this.getHotelRequest().getPrice() + winningBid.getExtraPrice();
+		this.dealTime = new Date();
 	}
 
 	public UserBidRequest getHotelRequest() {

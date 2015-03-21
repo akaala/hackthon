@@ -8,17 +8,16 @@ import service.PriceService;
 import service.UserService;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import service.BidService;
 import service.HotelService;
 import service.PriceService;
 import service.UserService;
 import Pojo.Hotel;
-import Pojo.UserBidRequest;
+import Pojo.HotelBidRequest;
 import Pojo.Order;
 import Pojo.User;
+import Pojo.UserBidRequest;
 
 public class Server {
 	public static void main(String[] args) {
@@ -30,18 +29,16 @@ public class Server {
 
 		PriceService service = PriceService.getInstance();
 
-		Map<Integer /* orderid */, Order> idToOrderList = new HashMap<>();
-
-		// custom do bid.
 		/**
 		 * Input: UserID, Price, Star, Place, Type, ExpireTime Output: OrderID or null(means failed)
 		 */
-		spark.Spark.get("/order/buy", (req, res) -> {
+		spark.Spark.get("/order/userbid", (req, res) -> {
 			int userId = Integer.valueOf(req.queryParams("userid"));
 			int price = Integer.valueOf(req.queryParams("price"));
 			int star = Integer.valueOf(req.queryParams("star"));
 			String place = req.queryParams("place");
 			String type = req.queryParams("type");
+			int timeout = Integer.valueOf(req.queryParams("timeout"));
 
 			Order order = new Order();
 			order.setUser(userService.getUserById(userId));
@@ -50,6 +47,7 @@ public class Server {
 			request.setStar(star);
 			request.setType(type);
 			request.setLocation(place);
+			order.setExpiretime(timeout);
 			order.setHotelRequest(request);
 			order.setCreateTime(new Date());
 
@@ -58,6 +56,21 @@ public class Server {
 
 			   return orderService.userBid(order);
 		   });
+
+		spark.Spark.get("/order/hotelbid", (req, res) -> {
+			int hotelId = Integer.valueOf(req.queryParams("hotelid"));
+			int orderId = Integer.valueOf(req.queryParams("orderid"));
+			int extra = Integer.valueOf(req.queryParams("extra"));
+			String comment = req.queryParams("comment");
+
+			HotelBidRequest request = new HotelBidRequest();
+			request.setComment(comment);
+			request.setExtraPrice(extra);
+			request.setCreateDate(new Date());
+			request.setHotelId(hotelId);
+			Order order = orderService.getOrder(orderId);
+			return orderService.hotelBid(request, order);
+		});
 
 		// show bid history and 概率
 		/**
@@ -79,7 +92,7 @@ public class Server {
 		/**
 		 * Input: UserID Output: List<Order>
 		 */
-		spark.Spark.get("/order/history", (req, res) -> {
+		spark.Spark.get("/user/orders", (req, res) -> {
 			int userId = Integer.valueOf(req.queryParams("userid"));
 			return userService.getUserOrders(userId);
 		});
@@ -87,19 +100,19 @@ public class Server {
 		/**
 		 * Input: Orderid Output: Order ： 主要用于竞拍页面，有哪些酒店浏览过，竞拍过。
 		 */
-		spark.Spark.get("/order/detail", (req, res) -> {
-			int orderId = Integer.valueOf(req.queryParams("orderid"));
-			   return orderService.getOrder(orderId);
-		   });
+		spark.Spark.get("/order/:orderid", (req, res) -> {
+			int orderId = Integer.valueOf(req.params(":orderid"));
+			return orderService.getOrder(orderId);
+		});
 
 		/**
 		 * Input: hotelid Output: List<Order>
 		 */
 		// hotel to check all his bids.
-        spark.Spark.get("/hotel/orderlist", (req, res) -> {
+		spark.Spark.get("/hotel/orders", (req, res) -> {
 			int hotelId = Integer.valueOf(req.queryParams("hotelid"));
 
-	         return JSON.toJSON(orderService.getOrderList(hotelId));
+			return orderService.getMatchedOrders(hotelId);
 		});
 
 	    spark.Spark.get("/hotel/get", (req, res) -> {

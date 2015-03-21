@@ -31,9 +31,9 @@ public class BidService {
 
 	private Map<Integer, Order> orderMap = new HashMap<>();
 
-	private AtomicInteger bidId = new AtomicInteger(1);
+	private AtomicInteger bidId = new AtomicInteger(0);
 
-	private AtomicInteger hotelBidId = new AtomicInteger(1);
+	private AtomicInteger hotelBidId = new AtomicInteger(0);
 
 	private BidService() {
 		startBidScanTask();
@@ -46,6 +46,7 @@ public class BidService {
 					for (Map.Entry<Integer, Order> entry : orderMap.entrySet()) {
 						Order order = entry.getValue();
 						if (order.getStatus() == OrderStatus.inbid) {
+							findWinningBid(order);
 							if (order.getWinningBid() != null) {
 								order.setStatus(OrderStatus.done);
 								continue;
@@ -101,16 +102,18 @@ public class BidService {
 	public Order userBid(Order order) {
 		int generatedId = bidId.incrementAndGet();
 		order.setOrderid(generatedId);
+		order.setStatus(OrderStatus.inbid);
 		orderMap.put(generatedId, order);
 		return order;
 	}
 
-	public void hotelBid(HotelBidRequest request, Order order) {
+	public HotelBidRequest hotelBid(HotelBidRequest request, Order order) {
 		request.setBidId(hotelBidId.incrementAndGet());
 		order.addHotelBidRequest(request);
+		return request;
 	}
 
-	public List<Order> getOrderList(int hotelId) {
+	public List<Order> getMatchedOrders(int hotelId) {
 		List<Order> result = new ArrayList<Order>();
 		HotelService hotelService = HotelService.getInstance();
 		Hotel hotel = hotelService.getHotelById(hotelId);
