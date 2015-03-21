@@ -25,4 +25,9 @@ public class OrderService {
     private int generateId() {
         return id.incrementAndGet();
     }
+
+    public Order getDoneOrder(int orderId) {
+        // todo: get done order by id.
+        return null;
+    }
 }

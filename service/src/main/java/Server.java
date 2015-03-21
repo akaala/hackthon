@@ -18,21 +18,12 @@ public class Server {
     public static void main(String[] args) {
         OrderService orderService = new OrderService();
         UserService userService = new UserService();
-        User user = new User();
-
-        String userS = JSON.toJSONString(user);
-
+        HotelService hotelService = new HotelService();
 
         ArrayListMultimap<Integer /*userid*/, Order> userToOrderHistory
                 = ArrayListMultimap.create();
 
         Map<Integer /*orderid*/, Order> idToOrderList = new HashMap<>();
-
-
-/*		get("/hello/:id", (req, res) -> {
-            int id = Integer.valueOf(req.params(":id"));
-			return ++id;
-		});*/
 
         // custom do bid.
         /**
@@ -67,6 +58,7 @@ public class Server {
          */
         get("/order/probability", (req, res) -> {
             String price = req.queryParams("price");
+            // Todo: TBD
             return 0;
         });
 
@@ -94,8 +86,10 @@ public class Server {
          * Output: List<Order>
          */
         // hotel to check all his bids.
-        get("/hotel/:id/orderlist", (req, res) -> {
-            return new ArrayList<>();
+        get("/hotel/:hotelid/orderlist", (req, res) -> {
+            int hotelId = Integer.valueOf(req.params(":hotelid"));
+
+            return hotelService.getOrderList(hotelId);
         });
 
 
@@ -104,7 +98,8 @@ public class Server {
          * Output: Order
          */
         get("/bid/done/:orderid", (req, res) -> {
-            return "bid id and hotel info...";
+            int orderId = Integer.valueOf(req.params(":orderid"));
+            return orderService.getDoneOrder(orderId);
         });
     }
 }
