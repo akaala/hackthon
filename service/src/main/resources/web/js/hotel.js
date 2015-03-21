@@ -44,4 +44,6 @@ hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http) {
         alert(orderId);
     }
 
+    $scope.addPrice = 0;
+
 });

@@ -15,29 +15,61 @@
 </head>
 <body ng-controller="HotelCtrl">
 
-<div class="container-fluid middle-font">
-    <div  ng-repeat="order in orders " class="row line-separator">
-        <div class="col-md-4">
-       订单信息：{{order.location}}, {{order.price}}, {{order.star}},
-            {{order.type}}, 是否超時{{order.bidTimeout}}
+<div class="container-fluid" style="font-size: 25px">
+    <div ng-repeat="order in orders" class="row line-separator"
+         style="border: solid 1px #66ccbd; background-color: #E8F4FF; font-size: 20px">
+        <div class="col-md-4" style="border: dotted 1px #66ccbd; height: 160px;">
+            <div class="row">
+                订单信息：超時{{order.bidTimeout}}
             </div>
-        <div class="col-md-6">用户信息：{{order.userName}}, {{order.userBidTimes}}
-            , {{order.Gender}}, {{order.userBidReturnTimes}}
-            消费潜力；消费次数
-        </div>
+            <div class="row">
+                入住地点：{{order.location}}
+            </div>
+            <div class="row">
 
-        <div class="col-md-2">
-        <button type="button" class="btn btn-info " ng-click="getOrder(order)">抢单
-        </button>
-        <input type="text" class="form-control" placeholder="加价金额..." ng-model="tooltip.message">
-                     <span class="input-group-btn">
-                    <button type="submit" class="btn btn-info " ng-click=send()>加价
-                        </button>
-                         </span>
+                期望价格：{{order.price}}
             </div>
 
+            <div class="row">
+                期望星级：{{order.star}}
+            </div>
+            <div class="row">
+                期望类型：{{order.type}}
+            </div>
+
         </div>
+        <div class="col-md-5" style="border: dotted 1px #66ccbd; height: 160px">
+            <div class="row">
+                用户性别：{{order.Gender}},
+            </div>
+            <div class="row">
+                竞标次数：{{order.userBidTimes}}
+            </div>
+            <div class="row">
+                回购次数：{{order.userBidReturnTimes}}
+            </div>
+            <div class="row">
+                消费潜力: 永远是高
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="col-md-1 col-md-offset-8" style="margin-top: 10px;">
+                <button type="button" class="btn btn-lg btn-info " ng-click="getOrder(order)">抢单
+                </button>
+            </div>
+
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control input" placeholder="加价金额..." aria-describedby="basic-addon2">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-lg btn-info " ng-click=send()>加价
+                    </button>
+                     </span>
+            </div>
+        </div>
+
     </div>
+</div>
 </div>
 </body>
 </html>

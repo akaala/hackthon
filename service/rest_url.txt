@@ -1,13 +1,11 @@
 
 用户确定下订单
-// type:1 经济型,2 商旅型
-http://10.16.52.103:4567/order/buy?userid=1&price=300&star=5&place=上海-浦东&type=1
+10.16.52.103:4567/order/buy?userid=1&price=300&star=5&place=上海-徐家汇&type=商务型
 返回：该订单的id
 
 
 用户调整订单参数时：
-// type:1 经济型,2 商旅型
-10.16.52.103:4567/order/probability?userid=1&star=5&place=上海-浦东&type=1&timeout=60
+10.16.52.103:4567/order/probability?star=5&place=上海-徐汇区&type=商务型&timeout=60
 返回：概率图
 
 
@@ -37,7 +35,8 @@ http://10.16.52.103:4567/order/buy?userid=1&price=300&star=5&place=上海-浦东
 返回：待定
 
 
-
+酒店详情：
+/hotel/1
 
 
 

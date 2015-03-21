@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import Pojo.Hotel;
 import Pojo.HotelBidRequest;
-import Pojo.HotelRequest;
+import Pojo.UserBidRequest;
 import Pojo.Order;
 import Pojo.Order.OrderStatus;
 
@@ -98,11 +98,11 @@ public class BidService {
 		}.start();
 	}
 
-	public int userBid(Order order) {
+	public Order userBid(Order order) {
 		int generatedId = bidId.incrementAndGet();
 		order.setOrderid(generatedId);
 		orderMap.put(generatedId, order);
-		return generatedId;
+		return order;
 	}
 
 	public void hotelBid(HotelBidRequest request, Order order) {
@@ -115,7 +115,7 @@ public class BidService {
 		HotelService hotelService = HotelService.getInstance();
 		Hotel hotel = hotelService.getHotelById(hotelId);
 		for (Order order : orderMap.values()) {
-			HotelRequest hotelRequest = order.getHotelRequest();
+			UserBidRequest hotelRequest = order.getHotelRequest();
 			boolean isMatchLocation = hotelRequest.getLocation() != null ? true : false;
 			if (!isMatchLocation) {
 				isMatchLocation = hotelRequest.getLocation().equals(hotel.getLocation());
