@@ -5,9 +5,11 @@
     <title>我的酒店我做主</title>
     <!--link rel="stylesheet" href="css/app.css"-->
     <link rel="stylesheet" href="lib/bootstrap-3.3.4-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="lib/slider/css/slider.css">
     <link rel="stylesheet" href="common.css">
     <script src="lib/angular.js"></script>
     <script src="lib/jquery-1.11.0.js"></script>
+    <script src="lib/slider/js/bootstrap-slider.js"></script>
     <script src="js/data-load.js"></script>
     <script src="js/modules.js"></script>
     <script src="js/mobile.js"></script>
@@ -56,6 +58,14 @@
             <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==12]" ng-click="expire=12">12小时</button>
             <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==24]" ng-click="expire=24">1天</button>
             <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[expire==72]" ng-click="expire=72">3天</button>
+        </div>
+    </div>
+    <div class="row line-separator">
+        <div class="col-xs-3">
+            我愿意出价：
+        </div>
+        <div class="col-xs-9" id="price-slider">
+
         </div>
     </div>
 </div>
