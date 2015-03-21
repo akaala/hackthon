@@ -20,3 +20,9 @@
 !.travis.yml
 *.iml
 .idea
+service/.idea
+service/out
+service/target
+service/.gitignore
+service/.project
+service/.classpath
