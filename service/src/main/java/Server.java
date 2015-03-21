@@ -10,12 +10,10 @@ import service.UserService;
 import java.util.HashMap;
 import java.util.Map;
 
-import static spark.Spark.get;
-import static spark.Spark.staticFileLocation;
 
 public class Server {
     public static void main(String[] args) {
-    	staticFileLocation("/web");
+        spark.Spark.staticFileLocation("/web");
 
 		OrderService orderService = new OrderService();
 		UserService userService = new UserService();
@@ -29,7 +27,7 @@ public class Server {
 		/**
 		 * Input: UserID, Price, Star, Place, Type, ExpireTime Output: OrderID or null(means failed)
 		 */
-		get("/order/buy", (req, res) -> {
+        spark.Spark.get("/order/buy", (req, res) -> {
 			int userId = Integer.valueOf(req.queryParams("userId"));
 			int price = Integer.valueOf(req.queryParams("price"));
 			int star = Integer.valueOf(req.queryParams("start"));
@@ -55,7 +53,7 @@ public class Server {
 		/**
 		 * Input: UserID, Price, Star, Place, Type, ExpireTime Output: Map<Price, Probability>
 		 */
-		get("/order/probability", (req, res) -> {
+        spark.Spark.get("/order/probability", (req, res) -> {
 			String price = req.queryParams("price");
 			// Todo: TBD
 			   return 0;
@@ -64,7 +62,7 @@ public class Server {
 		/**
 		 * Input: UserID Output: List<Order>
 		 */
-		get("/order/:userid/history", (req, res) -> {
+        spark.Spark.get("/order/:userid/history", (req, res) -> {
 			int userId = Integer.valueOf(req.queryParams("userId"));
 			return userToOrderHistory.get(userId);
 		});
@@ -72,7 +70,7 @@ public class Server {
 		/**
 		 * Input: Orderid Output: Order ： 主要用于竞拍页面，有哪些酒店浏览过，竞拍过。
 		 */
-		get("/bid/detail/:orderid", (req, res) -> {
+        spark.Spark.get("/bid/detail/:orderid", (req, res) -> {
 			int orderId = Integer.valueOf(req.params(":orderid"));
 			// TBD
 			   return idToOrderList.get(orderId);
@@ -82,7 +80,7 @@ public class Server {
 		 * Input: hotelid Output: List<Order>
 		 */
 		// hotel to check all his bids.
-		get("/hotel/:hotelid/orderlist", (req, res) -> {
+        spark.Spark.get("/hotel/:hotelid/orderlist", (req, res) -> {
 			int hotelId = Integer.valueOf(req.params(":hotelid"));
 
 			return hotelService.getOrderList(hotelId);
@@ -91,7 +89,7 @@ public class Server {
 		/**
 		 * Input: orderid Output: Order
 		 */
-		get("/bid/done/:orderid", (req, res) -> {
+        spark.Spark.get("/bid/done/:orderid", (req, res) -> {
 			int orderId = Integer.valueOf(req.params(":orderid"));
 			return orderService.getDoneOrder(orderId);
 		});
