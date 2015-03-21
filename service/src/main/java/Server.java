@@ -8,6 +8,7 @@ import Pojo.User;
 
 import com.google.common.collect.ArrayListMultimap;
 
+import service.HotelService;
 import service.OrderService;
 import service.UserService;
 
