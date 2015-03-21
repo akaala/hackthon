@@ -1,0 +1,45 @@
+
+用户确定下订单
+// type:1 经济型,2 商旅型
+/order/buy?userId=1&price=350&star=4&place=浦东&type=1
+返回：该订单的id
+
+
+用户调整订单参数时：
+// type:1 经济型,2 商旅型
+/order/probability?userid=1&price=350&star=4&place=浦东&type=1
+返回：概率图
+
+
+用户查看他所有订单记录：
+/order/history?userid=3:
+返回：该userid的所有订单状态(如成功，失败，竞拍中等等)
+
+
+用户查看单个竞拍中的订单：
+/order/detail?orderid=1009
+返回：该订单的详细信息（主要是有多少酒店浏览过，出价过，现在的状态）
+
+
+酒店查看所有order：
+/hotel/orderlist?hotelid=205
+返回：所有可抢的order
+
+酒店抢单:
+/hotel/get?hotelid=255&orderid=1009
+返回：(Boolean) success or fail
+
+酒店加价：
+/hotel/add?hotelid=255&orderid=1009&money=50&type=2
+255酒店对1009订单要求加价50元提供类型2的产品
+返回：待定
+
+
+
+
+
+
+
+
+
+
