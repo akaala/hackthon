@@ -5,3 +5,11 @@
 .middle-line {
     height: 60px
 }
+
+.line-separator {
+    border-bottom: lightgrey 1px solid;
+}
+
+.no-border {
+    border:none
+}

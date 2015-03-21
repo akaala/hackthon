@@ -4,15 +4,15 @@ package Pojo;
  * Created by Administrator on 2015-3-21.
  */
 public class Hotel {
-	int hotelid;
+	private int hotelid;
 
-	String name;
+	private String name;
 
-	int star;
+	private int star;
 
-	String type;
+	private String type;
 
-	String location;
+	private String location;
 
 	public int getHotelid() {
 		return hotelid;

@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.Test;
 
 import Pojo.Hotel;
+import Pojo.HotelBidRequest;
 import Pojo.HotelRequest;
 import Pojo.Order;
 import Pojo.User;
@@ -29,7 +30,7 @@ public class SystemTest {
 		hotelRequest.setType("经济型");
 		order.setHotelRequest(hotelRequest);
 
-		OrderService orderService = OrderService.getInstance();
+		BidService orderService = BidService.getInstance();
 		orderService.userBid(order);
 
 		HotelService hotelService = HotelService.getInstance();
@@ -37,5 +38,17 @@ public class SystemTest {
 		Hotel hotel = hotelService.getHotelById(myHotelId);
 		List<Order> orders = orderService.getOrderList(hotel.getHotelid());
 		System.out.println(orders);
+
+		if (orders.size() > 0) {
+			HotelBidRequest request = new HotelBidRequest();
+			request.setComment("我要我要我要");
+			request.setCreateDate(new Date());
+			request.setExtraPrice(5);
+			request.setHotelId(hotel.getHotelid());
+			orderService.hotelBid(request, orders.get(0));
+		}
+
+		Order latestOrder = orderService.getOrder(order.getOrderid());
+		System.out.println(latestOrder);
 	}
 }

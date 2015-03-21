@@ -4,7 +4,7 @@ import Pojo.HotelRequest;
 import com.google.common.collect.ArrayListMultimap;
 
 import service.HotelService;
-import service.OrderService;
+import service.BidService;
 import service.UserService;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public class Server {
     public static void main(String[] args) {
         spark.Spark.staticFileLocation("/web");
 
-		OrderService orderService = OrderService.getInstance();
+		BidService orderService = BidService.getInstance();
 		UserService userService = UserService.getInstance();
 		HotelService hotelService = HotelService.getInstance();
 
