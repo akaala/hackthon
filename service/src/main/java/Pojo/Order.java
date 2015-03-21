@@ -45,14 +45,6 @@ public class Order {
         this.user = user;
     }
 
-    public Hotel getNeededHotel() {
-        return neededHotel;
-    }
-
-    public void setNeededHotel(Hotel neededHotel) {
-        this.neededHotel = neededHotel;
-    }
-
     public int getPrice() {
         return price;
     }

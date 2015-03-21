@@ -36,11 +36,11 @@ public class Server {
                     String type = req.queryParams("type");
 
                     Order order = new Order();
-                    order.setUser(userService.getUser(userId));
+//                    order.setUser(userService.getUser(userId));
                     order.setPrice(price);
                     order.setStar(star);
                     order.setType(type);
-                    order.setPlace();
+//                    order.setPlace();
 
 
 
