@@ -2,8 +2,6 @@ import Pojo.Hotel;
 import Pojo.Order;
 import Pojo.OrderRequest;
 
-import com.alibaba.fastjson.JSON;
-
 import Pojo.User;
 
 import com.google.common.collect.ArrayListMultimap;
