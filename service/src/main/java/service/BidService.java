@@ -7,16 +7,17 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import Pojo.Hotel;
+import Pojo.HotelBidRequest;
 import Pojo.Order;
 
 /**
  * Created by Administrator on 2015-3-21.
  */
-public class OrderService {
+public class BidService {
 
-	private static final OrderService instance = new OrderService();
+	private static final BidService instance = new BidService();
 
-	public static OrderService getInstance() {
+	public static BidService getInstance() {
 		return instance;
 	}
 
@@ -24,7 +25,7 @@ public class OrderService {
 
 	static AtomicInteger id = new AtomicInteger(1);
 
-	private OrderService() {
+	private BidService() {
 
 	}
 
@@ -33,6 +34,10 @@ public class OrderService {
 		order.setOrderid(generatedId);
 		orderMap.put(generatedId, order);
 		return generatedId;
+	}
+
+	public void hotelBid(HotelBidRequest request, Order order) {
+		order.addHotelBidRequest(request);
 	}
 
 	private int generateId() {
@@ -55,5 +60,9 @@ public class OrderService {
 			}
 		}
 		return result;
+	}
+
+	public Order getOrder(int orderId) {
+		return orderMap.get(orderId);
 	}
 }
