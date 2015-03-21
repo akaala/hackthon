@@ -14,7 +14,7 @@ import Pojo.User;
 public class SystemTest {
 
 	@Test
-	public void testSimpleBid() {
+	public void testSimpleBid() throws Exception {
 		UserService userService = UserService.getInstance();
 
 		int myUserId = 1;

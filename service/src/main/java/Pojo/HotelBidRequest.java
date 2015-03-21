@@ -48,4 +48,8 @@ public class HotelBidRequest {
 	public String toString(){
 		return ToStringBuilder.reflectionToString(this);
 	}
+
+	public boolean satify(Order order) {
+	   return extraPrice == 0;
+   }
 }

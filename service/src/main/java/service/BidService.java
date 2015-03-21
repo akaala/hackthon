@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import Pojo.Hotel;
 import Pojo.HotelBidRequest;
@@ -15,6 +19,8 @@ import Pojo.Order;
  */
 public class BidService {
 
+	private static Logger log = LoggerFactory.getLogger(BidService.class);
+	
 	private static final BidService instance = new BidService();
 
 	public static BidService getInstance() {
@@ -26,7 +32,57 @@ public class BidService {
 	static AtomicInteger id = new AtomicInteger(1);
 
 	private BidService() {
+		startBidScanTask();
+	}
 
+	private void startBidScanTask() {
+		new Thread() {
+			public void run() {
+				while (true) {
+					for (Map.Entry<Integer, Order> entry : orderMap.entrySet()) {
+						Order order = entry.getValue();
+						if (!order.isDone()) {
+							if (order.isTimeout()) {
+								findBestLosingBid(order);
+							} else {
+								findWinningBid(order);
+							}
+						}
+					}
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+
+			private void findBestLosingBid(Order order) {
+				if (order.getBestLosingBid() == null) {
+					Random rnd = new Random(System.currentTimeMillis());
+					for (Map.Entry<Integer, List<HotelBidRequest>> bidEntry : order.getBidMap().entrySet()) {
+						List<HotelBidRequest> bidReqs = bidEntry.getValue();
+						// TODO choose a random bid currently
+						HotelBidRequest bestLosingBid = bidReqs.get(rnd.nextInt(bidReqs.size()));
+						log.info(String.format("Choose %s as best losing bid for %s", bestLosingBid, order));
+						order.setBestLosingBid(bestLosingBid);
+					}
+				}
+			}
+
+			private void findWinningBid(Order order) {
+				if (order.getWinningBid() == null) {
+					for (Map.Entry<Integer, List<HotelBidRequest>> bidEntry : order.getBidMap().entrySet()) {
+						for (HotelBidRequest bid : bidEntry.getValue()) {
+							if (bid.satify(order)) {
+								order.setWinningBid(bid);
+								log.info(String.format("Choose %s as winning bid for %s", bid, order));
+								return;
+							}
+						}
+					}
+				}
+			}
+		}.start();
 	}
 
 	public int userBid(Order order) {

@@ -32,6 +32,26 @@ public class Order {
 	private Map<Integer /* hotelid */, List<HotelBidRequest> /* price */> bidMap = new HashMap<>();
 
 	private HotelRequest orderRequest;
+	
+	private HotelBidRequest winningBid;
+	
+	private HotelBidRequest bestLosingBid;
+	
+	public HotelBidRequest getBestLosingBid() {
+		return bestLosingBid;
+	}
+
+	public void setBestLosingBid(HotelBidRequest bestLosingBid) {
+		this.bestLosingBid = bestLosingBid;
+	}
+
+	public HotelBidRequest getWinningBid() {
+		return winningBid;
+	}
+
+	public void setWinningBid(HotelBidRequest winningBid) {
+		this.winningBid = winningBid;
+	}
 
 	public HotelRequest getHotelRequest() {
 		return orderRequest;
@@ -115,6 +135,14 @@ public class Order {
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public boolean isTimeout() {
+		return System.currentTimeMillis() > createTime.getTime() + expiretime * 60L * 1000;
+	}
+
+	public boolean isDone() {
+		return winningBid != null || bestLosingBid != null;
 	}
 
 }
