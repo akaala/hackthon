@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import Pojo.Hotel;
 
 /**
@@ -45,7 +47,7 @@ public class HotelService {
 	}
 
 	public Hotel getHotelById(int hotelId) {
-		return hotelMap.get(hotelId % HOTEL_INIT_DATA_SIZE);
+		return hotelMap.get(hotelId);
 	}
 
 	/**
@@ -69,5 +71,9 @@ public class HotelService {
 
 	private int generatedId() {
 		return id.incrementAndGet();
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

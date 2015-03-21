@@ -25,10 +25,9 @@ public class UserService {
 
 	private Map<Integer, User> userMap = new HashMap<>();
 
-	 ArrayListMultimap<Integer /* userid */, Order> userToOrderHistory = ArrayListMultimap.create();
+	ArrayListMultimap<Integer /* userid */, Order> userToOrderHistory = ArrayListMultimap.create();
 
-
-	 private AtomicInteger id = new AtomicInteger(1);
+	private AtomicInteger id = new AtomicInteger(0);
 
 	private UserService() {
 		initData();
@@ -36,24 +35,16 @@ public class UserService {
 
 	public synchronized User getUserById(int userID) {
 		User user = userMap.get(userID);
-		if (user == null) {
-			user = new User();
-			user.setUserid(id.incrementAndGet());
-			user.setName("test");
-			user.setGender("female");
-			userMap.put(id.get(), user);
-		}
 		return user;
 	}
 
-
 	public void addUserOrder(int userId, Order order) {
-		 userToOrderHistory.put(userId, order);
+		userToOrderHistory.put(userId, order);
 	}
 
-	 public List<Order> getUserOrders(int userId) {
-		 return userToOrderHistory.get(userId);
-	 }
+	public List<Order> getUserOrders(int userId) {
+		return userToOrderHistory.get(userId);
+	}
 
 	private void initData() {
 		String[] userNameArray = { "刘一鸣", "顾庆", "柯圣", "秦峰", "黄弋简" };

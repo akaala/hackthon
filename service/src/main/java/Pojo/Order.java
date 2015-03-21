@@ -37,7 +37,7 @@ public class Order {
 	// bid list:
 	private Map<Integer /* hotelid */, List<HotelBidRequest> /* price */> bidMap = new HashMap<>();
 
-	private HotelRequest orderRequest;
+	private UserBidRequest orderRequest;
 
 	private HotelBidRequest winningBid;
 
@@ -59,11 +59,11 @@ public class Order {
 		this.winningBid = winningBid;
 	}
 
-	public HotelRequest getHotelRequest() {
+	public UserBidRequest getHotelRequest() {
 		return orderRequest;
 	}
 
-	public void setHotelRequest(HotelRequest orderRequest) {
+	public void setHotelRequest(UserBidRequest orderRequest) {
 		this.orderRequest = orderRequest;
 	}
 

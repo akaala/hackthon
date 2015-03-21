@@ -8,7 +8,7 @@ import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.RealDistribution;
 
-import Pojo.HotelRequest;
+import Pojo.UserBidRequest;
 import Pojo.PricePoint;
 
 public class PriceService {
@@ -23,7 +23,7 @@ public class PriceService {
 
 	}
 
-	public double getNormalPrice(HotelRequest request) {
+	public double getNormalPrice(UserBidRequest request) {
 		double base = request.getStar() * 200;
 		switch (request.getType()) {
 		case "商务型":
