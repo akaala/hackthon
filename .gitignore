@@ -8,3 +8,15 @@
 /*.bat
 !.travis.yml
 *.iml
+
+/ws/*
+/target/*
+/bin/*
+/*/target/*
+/*/bin/*
+/*/.*
+.*
+/*.bat
+!.travis.yml
+*.iml
+.idea
