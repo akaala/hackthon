@@ -4,14 +4,24 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
-import Pojo.HotelRequest;
-import Pojo.PricePoint;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.RealDistribution;
 
+import Pojo.HotelRequest;
+import Pojo.PricePoint;
+
 public class PriceService {
+
+	private static final PriceService instance = new PriceService();
+
+	public static final PriceService getInstance() {
+		return instance;
+	}
+
+	private PriceService() {
+
+	}
 
 	public double getNormalPrice(HotelRequest request) {
 		double base = request.getStar() * 200;
