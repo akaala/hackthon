@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 
 import Pojo.User;
 import service.OrderService;
+import service.UserService;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,7 @@ import static spark.Spark.post;
 public class Server {
     public static void main(String[] args) {
         OrderService orderService = new OrderService();
+        UserService userService = new UserService();
         User user = new User();
 
         String userS = JSON.toJSONString(user);
@@ -36,7 +38,7 @@ public class Server {
                     String type = req.queryParams("type");
 
                     Order order = new Order();
-//                    order.setUser(userService.getUser(userId));
+                    order.setUser(userService.getUserById(userId));
                     order.setPrice(price);
                     order.setStar(star);
                     order.setType(type);
