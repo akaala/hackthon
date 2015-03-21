@@ -1,5 +1,5 @@
 import Pojo.Order;
-import Pojo.OrderRequest;
+import Pojo.HotelRequest;
 
 import com.google.common.collect.ArrayListMultimap;
 
@@ -15,9 +15,9 @@ public class Server {
     public static void main(String[] args) {
         spark.Spark.staticFileLocation("/web");
 
-		OrderService orderService = new OrderService();
-		UserService userService = new UserService();
-		HotelService hotelService = new HotelService();
+		OrderService orderService = OrderService.getInstance();
+		UserService userService = UserService.getInstance();
+		HotelService hotelService = HotelService.getInstance();
 
 		ArrayListMultimap<Integer /* userid */, Order> userToOrderHistory = ArrayListMultimap.create();
 
@@ -36,17 +36,17 @@ public class Server {
 
 			Order order = new Order();
 			order.setUser(userService.getUserById(userId));
-			OrderRequest request = new OrderRequest();
+			HotelRequest request = new HotelRequest();
 			request.setPrice(price);
 			request.setStar(star);
 			request.setType(type);
 			request.setLocation(place);
-			order.setOrderRequest(request);
+			order.setHotelRequest(request);
 
 			// put into userToOrderHistory
 			   userToOrderHistory.put(userId, order);
 
-			   return orderService.buy(order);
+			   return orderService.userBid(order);
 		   });
 
 		// show bid history and 概率
@@ -83,7 +83,7 @@ public class Server {
         spark.Spark.get("/hotel/:hotelid/orderlist", (req, res) -> {
 			int hotelId = Integer.valueOf(req.params(":hotelid"));
 
-			return hotelService.getOrderList(hotelId);
+			return orderService.getOrderList(hotelId);
 		});
 
 		/**

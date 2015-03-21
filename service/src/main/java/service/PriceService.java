@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 
-import Pojo.OrderRequest;
+import Pojo.HotelRequest;
 import Pojo.PricePoint;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
@@ -13,7 +13,7 @@ import org.apache.commons.math3.distribution.RealDistribution;
 
 public class PriceService {
 
-	public double getNormalPrice(OrderRequest request) {
+	public double getNormalPrice(HotelRequest request) {
 		double base = request.getStar() * 200;
 		switch (request.getType()) {
 		case "商务型":

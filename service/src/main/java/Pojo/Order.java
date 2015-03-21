@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * Created by Administrator on 2015-3-21.
  */
@@ -27,13 +29,13 @@ public class Order {
 	// bid list:
 	private Map<Integer /* hotelid */, Integer /* price */> bidMap;
 
-	private OrderRequest orderRequest;
+	private HotelRequest orderRequest;
 
-	public OrderRequest getOrderRequest() {
+	public HotelRequest getHotelRequest() {
 		return orderRequest;
 	}
 
-	public void setOrderRequest(OrderRequest orderRequest) {
+	public void setHotelRequest(HotelRequest orderRequest) {
 		this.orderRequest = orderRequest;
 	}
 
@@ -101,4 +103,8 @@ public class Order {
 		this.dealPrice = dealPrice;
 	}
 
+	public String toString(){
+		return ToStringBuilder.reflectionToString(this);
+	}
+	
 }

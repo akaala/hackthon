@@ -4,50 +4,53 @@ package Pojo;
  * Created by Administrator on 2015-3-21.
  */
 public class Hotel {
-    int hotelid;
-    String name;
-    int star;
-    String type;
-    String place;
+	int hotelid;
 
+	String name;
 
-    public int getHotelid() {
-        return hotelid;
-    }
+	int star;
 
-    public void setHotelid(int hotelid) {
-        this.hotelid = hotelid;
-    }
+	String type;
 
-    public String getName() {
-        return name;
-    }
+	String location;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public int getHotelid() {
+		return hotelid;
+	}
 
-    public int getStar() {
-        return star;
-    }
+	public void setHotelid(int hotelid) {
+		this.hotelid = hotelid;
+	}
 
-    public void setStar(int star) {
-        this.star = star;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public int getStar() {
+		return star;
+	}
 
-    public String getPlace() {
-        return place;
-    }
+	public void setStar(int star) {
+		this.star = star;
+	}
 
-    public void setPlace(String place) {
-        this.place = place;
-    }
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String place) {
+		this.location = place;
+	}
 }
