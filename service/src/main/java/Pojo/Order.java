@@ -8,112 +8,87 @@ import java.util.Map;
  * Created by Administrator on 2015-3-21.
  */
 public class Order {
-    int orderid;
-    User user;
+	private int orderid;
 
-    int price;
-    int star;
-    String type;
-    String place;
+	private User user;
 
+	private Date createTime;
 
-    Date createTime;
-    int expiretime ;  // in hour
+	private int expiretime; // in minutes
 
-    // "inprogress", "addprice", "done";
-    String status;
+	// "inprogress", "addprice", "done";
+	private String status;
 
-    // viewed list;
-    List<Hotel> viewedList;
+	// viewed list;
+	private List<Hotel> viewedList;
 
-    // bid list:
-    Map<Integer /*hotelid*/, Integer /*price*/> bidMap;
+	// bid list:
+	private Map<Integer /* hotelid */, Integer /* price */> bidMap;
 
-    public int getOrderid() {
-        return orderid;
-    }
+	private OrderRequest orderRequest;
 
-    public void setOrderid(int orderid) {
-        this.orderid = orderid;
-    }
+	public OrderRequest getOrderRequest() {
+		return orderRequest;
+	}
 
-    public User getUser() {
-        return user;
-    }
+	public void setOrderRequest(OrderRequest orderRequest) {
+		this.orderRequest = orderRequest;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public int getOrderid() {
+		return orderid;
+	}
 
-    public int getPrice() {
-        return price;
-    }
+	public void setOrderid(int orderid) {
+		this.orderid = orderid;
+	}
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public Date getCreateTime() {
-        return createTime;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
+	public Date getCreateTime() {
+		return createTime;
+	}
 
-    public int getExpiretime() {
-        return expiretime;
-    }
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
 
-    public void setExpiretime(int expiretime) {
-        this.expiretime = expiretime;
-    }
+	public int getExpiretime() {
+		return expiretime;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public void setExpiretime(int expiretime) {
+		this.expiretime = expiretime;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public List<Hotel> getViewedList() {
-        return viewedList;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public void setViewedList(List<Hotel> viewedList) {
-        this.viewedList = viewedList;
-    }
+	public List<Hotel> getViewedList() {
+		return viewedList;
+	}
 
-    public Map<Integer, Integer> getBidMap() {
-        return bidMap;
-    }
+	public void setViewedList(List<Hotel> viewedList) {
+		this.viewedList = viewedList;
+	}
 
-    public void setBidMap(Map<Integer, Integer> bidMap) {
-        this.bidMap = bidMap;
-    }
+	public Map<Integer, Integer> getBidMap() {
+		return bidMap;
+	}
 
-    public int getStar() {
-        return star;
-    }
+	public void setBidMap(Map<Integer, Integer> bidMap) {
+		this.bidMap = bidMap;
+	}
 
-    public void setStar(int star) {
-        this.star = star;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
-    }
 }
