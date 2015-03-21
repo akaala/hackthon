@@ -11,8 +11,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class UserService {
 
+    private static final int INIT_USER_DATA_SIZE = 5;
     private static Map<Integer, User> userMap = new HashMap<>();
-    public static AtomicInteger id = new AtomicInteger(1);
+    private static AtomicInteger id = new AtomicInteger(1);
+
+    public UserService() {
+        initData();
+    }
 
     public synchronized User getUserById(int userID) {
         User user = userMap.get(userID);
@@ -24,5 +29,16 @@ public class UserService {
             userMap.put(id.get(), user);
         }
         return user;
+    }
+
+    private void initData() {
+        String[] userNameArray = {"刘一鸣","顾庆", "柯圣", "秦峰", "黄弋简"};
+        for(int i = 0 ; i < INIT_USER_DATA_SIZE; i++) {
+            User user = new User();
+            user.setName((userNameArray[i]));
+            user.setSex("male");
+            user.setUserid(id.incrementAndGet());
+            userMap.put(user.getUserid(), user);
+        }
     }
 }

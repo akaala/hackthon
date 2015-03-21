@@ -13,15 +13,14 @@
     <script src="js/student-list.js"></script>
 </head>
 <body>
-<div class="container-fluid middle-font">
-
+<div class="container-fluid middle-font" ng-controller="MobileController">
     <div style="background: dodgerblue; color:white; text-align: center" >
         酒店竞标
     </div>
     <div class="row">
-        <div class="col-xs-4">
-            <input type="text" class="form-control middle-font middle-line" id="start-time" placeholder="2015-3-21"
-                    style="color:black; border:none;">
+       <div class="col-xs-4">
+               <input type="text" class="form-control middle-font middle-line" id="start-time" placeholder="2015-3-21"
+                      style="color:black; border:none;">
         </div>
         <div class="col-xs-1">
             <span>&gt;</span>
@@ -30,9 +29,12 @@
             <input type="text" class="form-control middle-font middle-line" id="end-time" placeholder="2015-3-25"
                    style="color:black; border:none;">
         </div>
+    </div>
+    <div class="row">
         <div class="col-xs-4">
-            <input type="text" class="form-control middle-font middle-line" id="end-time" placeholder="2015-3-25"
-                   style="color:black; border:none;">
+            <select ng-model="selected" ng-options="m for m in locations">
+                <option value="">-- 请选择 --</option>
+            </select>
         </div>
     </div>
 </div>
