@@ -1,6 +1,6 @@
 package Pojo;
 
-public class OrderRequest {
+public class HotelRequest {
 	private int price;
 
 	// 1, 2, 3, 4, 5

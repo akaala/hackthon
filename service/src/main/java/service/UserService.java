@@ -12,13 +12,19 @@ import Pojo.User;
  */
 public class UserService {
 
+	private static final UserService instance = new UserService();
+
+	public static UserService getInstance() {
+		return instance;
+	}
+
 	private static final int INIT_USER_DATA_SIZE = 5;
 
-	private static Map<Integer, User> userMap = new HashMap<>();
+	private Map<Integer, User> userMap = new HashMap<>();
 
-	private static AtomicInteger id = new AtomicInteger(1);
+	private AtomicInteger id = new AtomicInteger(1);
 
-	public UserService() {
+	private UserService() {
 		initData();
 	}
 
@@ -45,7 +51,7 @@ public class UserService {
 			user.setName((userNameArray[i]));
 			user.setGender(gender[random.nextInt(gender.length)]);
 			user.setBirth(birth[random.nextInt(birth.length)]);
-			user.setBidTimes(random.nextInt(10));
+			user.setBidTimes(random.nextInt(10) + 1);
 			user.setBidReturnTimes(random.nextInt(user.getBidTimes()));
 			user.setIncome(income[random.nextInt(income.length)]);
 			user.setUserid(id.incrementAndGet());
