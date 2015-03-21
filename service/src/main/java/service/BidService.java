@@ -41,11 +41,17 @@ public class BidService {
 				while (true) {
 					for (Map.Entry<Integer, Order> entry : orderMap.entrySet()) {
 						Order order = entry.getValue();
-						if (!order.isDone()) {
-							if (order.isTimeout()) {
-								findBestLosingBid(order);
-							} else {
-								findWinningBid(order);
+						if (order.isTimeout()) {
+							if (!order.isDead()) {
+								if (order.shouldDead()) {
+									log.info(String.format("%s is dead", order));
+									order.setDead(true);
+								} else {
+									findWinningBid(order);
+									if (order.getWinningBid() == null) {
+										findBestLosingBid(order);
+									}
+								}
 							}
 						}
 					}
