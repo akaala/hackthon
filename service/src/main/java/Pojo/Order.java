@@ -37,6 +37,17 @@ public class Order {
 	
 	private HotelBidRequest bestLosingBid;
 	
+	// unacked within 1min
+	private boolean dead = false;
+	
+	public boolean isDead() {
+		return dead;
+	}
+
+	public void setDead(boolean dead) {
+		this.dead = dead;
+	}
+
 	public HotelBidRequest getBestLosingBid() {
 		return bestLosingBid;
 	}
@@ -144,5 +155,10 @@ public class Order {
 	public boolean isDone() {
 		return winningBid != null || bestLosingBid != null;
 	}
+
+	public boolean shouldDead() {
+		// dead 1min after timeout
+	   return System.currentTimeMillis() > createTime.getTime() + expiretime * 60L * 1000 + 60 *1000;
+   }
 
 }
