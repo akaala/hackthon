@@ -15,10 +15,10 @@
     <script src="js/modules.js"></script>
     <script src="js/mobile.js"></script>
 </head>
-<body>
+<body ng-controller="RootController">
 
 <!-- New Order page -->
-<div class="container-fluid middle-font" ng-controller="NewOrderController" ng-if=="page='newOrder'">
+<div class="container-fluid middle-font" ng-controller="NewOrderController" ng-if="page=='newOrder'">
     <div class="row line-separator page-title">
         创建酒店竞标
     </div>
@@ -94,16 +94,16 @@
     </div>
     <div class="row line-separator" ng-options="order for order in orderHistory">
         <div class="col-xs-3">
-            {{order.date}}
+            {{order}}
         </div>
         <div class="col-xs-3">
             {{order.status}}
         </div>
         <div class="col-xs-3">
-            {{order.finalPrice}}
+            {{order.finalPrice}} 元
         </div>
         <div class="col-xs-3">
-            {{order.hotel}}
+            {{order.hotelName}}
         </div>
     </div>
 </div>

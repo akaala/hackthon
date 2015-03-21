@@ -1,11 +1,15 @@
 /**
  * Created by hyj on 15-3-21.
  */
-mobileModule.controller('NewOrderController', function ($scope, $http) {
+mobileModule.controller('RootController', function ($rootScope, $scope, $http) {
+    $rootScope.page = "newOrder";
+});
+
+mobileModule.controller('NewOrderController', function ($rootScope, $scope, $http) {
 
     $scope.sendOrder = function()
     {
-        $scope.page = "orderList";
+        $rootScope.page = "orderList";
     }
 
     $scope.refreshBidRange = function()
@@ -22,7 +26,6 @@ mobileModule.controller('NewOrderController', function ($scope, $http) {
         $scope.types = [ {id: 1, name: "经济型"}, {id: 2, name: "商旅型"}];
         $scope.type = 1;
         $scope.expire = 3;
-        $scope.page = "newOrder";
 
         $('#price-slider').slider({min: 10, max: 5000, step: 10,
             orientation: "horizontal", handle: "round"}).on('slide', function(ev){
@@ -35,9 +38,11 @@ mobileModule.controller('NewOrderController', function ($scope, $http) {
     $scope.init();
 });
 
-mobileModule.controller('OrderListController', function ($scope, $http) {
+mobileModule.controller('OrderListController', function ($rootScope, $scope, $http) {
     $scope.init = function() {
-
+        $scope.orderHistory =
+            [{date: new Date(), status: "完成", finalPrice: "1200", hotel: "银行大酒店"}
+            ,{date: new Date(), status: "完成", finalPrice: "1200", hotel: "银行大酒店"}];
     }
 
     $scope.init();
