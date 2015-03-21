@@ -29,6 +29,8 @@ http://10.16.52.103:4567/order/buy?userid=1&price=300&star=5&place=上海-浦东
 /hotel/get?hotelid=255&orderid=1009
 返回：(Boolean) success or fail
 
+
+//暂时不实现
 酒店加价：
 /hotel/add?hotelid=255&orderid=1009&money=50&type=2
 255酒店对1009订单要求加价50元提供类型2的产品

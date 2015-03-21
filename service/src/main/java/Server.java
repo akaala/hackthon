@@ -1,6 +1,7 @@
 import Pojo.Order;
 import Pojo.HotelRequest;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.ArrayListMultimap;
 
 import service.HotelService;
@@ -22,9 +23,6 @@ public class Server {
 		HotelService hotelService = HotelService.getInstance();
 
 	    PriceService service = PriceService.getInstance();
-
-
-		Map<Integer /* orderid */, Order> idToOrderList = new HashMap<>();
 
 		// custom do bid.
 		/**
@@ -68,7 +66,7 @@ public class Server {
 	        int timeoutMin = Integer.valueOf(req.queryParams("timeout"));
 
 	        double normalPrice = service.getNormalPrice(request);
-	        return service.getPricePoint(normalPrice, timeoutMin , new Date());
+	        return JSON.toJSON(service.getPricePoint(normalPrice, timeoutMin , new Date()));
 		   });
 
 		/**
@@ -84,8 +82,7 @@ public class Server {
 		 */
         spark.Spark.get("/order/detail", (req, res) -> {
 			int orderId = Integer.valueOf(req.queryParams("orderid"));
-			// TBD
-			   return idToOrderList.get(orderId);
+			   return orderService.getOrder(orderId);
 		   });
 
 		/**
@@ -93,17 +90,24 @@ public class Server {
 		 */
 		// hotel to check all his bids.
         spark.Spark.get("/hotel/orderlist", (req, res) -> {
-			int hotelId = Integer.valueOf(req.queryParams(":hotelid"));
+			int hotelId = Integer.valueOf(req.queryParams("hotelid"));
 
 	         return orderService.getOrderList(hotelId);
 		});
 
-		/**
+	    spark.Spark.get("/hotel/get", (req, res) -> {
+		    int hotelId = Integer.valueOf(req.queryParams("hotelid"));
+		    int orderId = Integer.valueOf(req.queryParams("orderid"));
+				//todo
+		    return null;
+	    });
+
+	/*	*//**
 		 * Input: orderid Output: Order
-		 */
-        spark.Spark.get("/order/done/", (req, res) -> {
+		 *//*
+        spark.Spark.get("/hotel/add", (req, res) -> {
 			int orderId = Integer.valueOf(req.params("orderid"));
 			return orderService.getDoneOrder(orderId);
-		});
+		});*/
 	}
 }
