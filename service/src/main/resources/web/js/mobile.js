@@ -249,7 +249,15 @@ mobileModule.controller('OrderListController', function ($rootScope, $scope, $ht
                 {
                     var order = data[i];
                     order.date = new Date(order.createTime);
-                    order.cstatus = (order.status == "success") ? "已成交" : "已流单";
+                    if (order.status ==  "success") {
+                        order.cstatus = "已成交";
+                    } else if (order.status == "fail") {
+                        order.cstatus = "已流单";
+                    } else if (order.status == "inbid") {
+                        order.cstatus = "竞价中";
+                    } else if (order.status == "extrabid") {
+                        order.cstatus = "议价中";
+                    }
                 }
             });
     }

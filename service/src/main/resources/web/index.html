@@ -118,11 +118,11 @@
 <!-- Order list page-->
 <div class="container-fluid middle-font" ng-controller="OrderListController" ng-if="page==pages.ORDER_LIST">
     <div class="row line-separator page-title">
-        出价历史
+        <span class="pull-left" >用户{{userId}} </span>出价历史
     </div>
     <div class="row line-separator" ng-repeat="order in orderHistory">
-        <div class="col-xs-3">
-            {{order.date | date:"yyyy-MM-dd"}}
+        <div class="col-xs-4" style="font-size:20px">
+            {{order.date | date:"yyyy-MM-dd hh:mm:ss"}}
         </div>
         <div class="col-xs-2">
             <button class='btn middle-font' ng-class="{true: 'btn-success'}[order.cstatus=='已成交']" ng-click="openOrder(order)">{{order.cstatus}}</button>
@@ -130,7 +130,7 @@
         <div class="col-xs-2">
             {{order.dealPrice}} 元
         </div>
-        <div class="col-xs-5">
+        <div class="col-xs-4">
             {{order.winningBid.hotel.name}}
         </div>
     </div>
