@@ -2,7 +2,7 @@
  * Created by Administrator on 2015-3-21.
  */
 
-var RestUrl = "http://10.16.52.103:4567";
+var RestUrl = "http://192.168.255.16:4567";
 
 
 var hotelModule = angular.module('Hotel', ['angular-jqcloud', 'n3-pie-chart','mgcrea.ngStrap']);
@@ -38,12 +38,31 @@ function newOrder(orderid, status,bidTimeout, location, price, star, type,
     this.addPrice = 0;
 }
 
+function GetRequest() {
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        if (str.indexOf("&") != -1) {
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+            }
+        } else {
+            theRequest[str.split("=")[0]] = unescape(str.split("=")[1]);
+        }
+    }
+    return theRequest;
+}
 
-hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http) {
-    var HotelId = Math.ceil(Math.random()*5);
 
+hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http, $location) {
+    //var HotelId = Math.ceil(Math.random()*5);
 
-    $scope.HotelId = HotelId;
+    var Request = new Object();
+    Request = GetRequest();
+
+    $scope.HotelId = Request['id']
 
     $scope.orders = []
     $http.get(RestUrl + "/hotel/orders" + "?hotelid=" + HotelId)
