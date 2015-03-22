@@ -100,6 +100,7 @@ public class Server {
 
 		spark.Spark.get("/order/counts", (req, res) -> {
 			Map<OrderStatus, Integer> orderCounts = orderService.getOrderCounts();
+			addHeader(res);
 			return JSON.toJSON(orderCounts);
 		});
 
