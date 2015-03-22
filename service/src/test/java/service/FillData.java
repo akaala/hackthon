@@ -13,13 +13,13 @@ public class FillData {
 
 	@Test
 	public void fillHotelBid() throws ClientProtocolException, IOException {
-		int orderid = 1;
-		int hotelid = 1;
+		int orderid = 20;
+		int hotelid = 3;
 		int extra = 5;
 		// Suppose orderid = 1;
 		Content content = Request
 		      .Get(host + "order/hotelbid?hotelid=" + hotelid + "&orderid=" + orderid + "&extra=" + extra
-		            + "&comment=FUCK").execute().returnContent();
+		            + "&comment=...").execute().returnContent();
 		System.out.println(content);
 	}
 }

@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * Created by Administrator on 2015-3-21.
  */
 public class Hotel {
+	private String url;
+
 	private int hotelid;
 
 	private String name;
@@ -78,5 +80,13 @@ public class Hotel {
 
 	public void setLng(double lng) {
 		this.lng = lng;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

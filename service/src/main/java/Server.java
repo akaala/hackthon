@@ -1,21 +1,13 @@
-import Pojo.Order;
-
-import com.alibaba.fastjson.JSON;
-
-import service.HotelService;
-import service.BidService;
-import service.PriceService;
-import service.UserService;
-
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import service.BidService;
 import service.HotelService;
 import service.PriceService;
 import service.UserService;
+import spark.Response;
 import Pojo.Hotel;
 import Pojo.HotelBidRequest;
 import Pojo.Order;
@@ -62,6 +54,8 @@ public class Server {
 			   userService.addUserOrder(userId, order);
 
 			   order = orderService.userBid(order);
+
+			   addHeader(res);
 			   return JSON.toJSON(order);
 		   });
 
@@ -80,6 +74,7 @@ public class Server {
 			request.setHotel(hotel);
 			Order order = orderService.getOrder(orderId);
 			HotelBidRequest hotelBid = orderService.hotelBid(request, order);
+			addHeader(res);
 			return JSON.toJSON(hotelBid);
 		});
 
@@ -90,11 +85,13 @@ public class Server {
 			int orderId = Integer.valueOf(req.queryParams("orderid"));
 			int hotelBidId = Integer.valueOf(req.queryParams("hotelbidid"));
 			Order order = orderService.confirmOrderBid(orderId, hotelBidId);
+			addHeader(res);
 			return JSON.toJSON(order);
 		});
 
 		spark.Spark.get("/order/counts", (req, res) -> {
 			Map<OrderStatus, Integer> orderCounts = orderService.getOrderCounts();
+			addHeader(res);
 			return JSON.toJSON(orderCounts);
 		});
 
@@ -107,14 +104,14 @@ public class Server {
 			request.setType(req.queryParams("type"));
 			request.setStar(Integer.valueOf(req.queryParams("star")));
 			request.setLocation(req.queryParams("place"));
-			// request.setPrice(Integer.valueOf(req.queryParams("price")));
 
-			   int timeoutMin = Integer.valueOf(req.queryParams("timeout"));
+			int timeoutMin = Integer.valueOf(req.queryParams("timeout"));
 
-			   double normalPrice = service.getNormalPrice(request);
-			   List<PricePoint> prices = service.getPricePoint(normalPrice, timeoutMin, new Date());
-			   return JSON.toJSON(prices);
-		   });
+			double normalPrice = service.getNormalPrice(request);
+			List<PricePoint> prices = service.getPricePoint(normalPrice, timeoutMin, new Date());
+			addHeader(res);
+			return JSON.toJSON(prices);
+		});
 
 		/**
 		 * Input: UserID Output: List<Order>
@@ -122,6 +119,8 @@ public class Server {
 		spark.Spark.get("/user/orders", (req, res) -> {
 			int userId = Integer.valueOf(req.queryParams("userid"));
 			List<Order> orders = userService.getUserOrders(userId);
+			addHeader(res);
+
 			return JSON.toJSON(orders);
 		});
 
@@ -133,6 +132,7 @@ public class Server {
 			int hotelId = Integer.valueOf(req.queryParams("hotelid"));
 
 			List<Order> orders = orderService.getMatchedOrders(hotelId);
+			addHeader(res);
 			return JSON.toJSON(orders);
 		});
 
@@ -142,20 +142,47 @@ public class Server {
 		spark.Spark.get("/order/:orderid", (req, res) -> {
 			int orderId = Integer.valueOf(req.params(":orderid"));
 			Order order = orderService.getOrder(orderId);
+			addHeader(res);
 			return JSON.toJSON(order);
+		});
+
+		spark.Spark.get("/order/list", (req, res) -> {
+			Collection<Order> orders = orderService.getOrders();
+			addHeader(res);
+			return JSON.toJSON(orders);
 		});
 
 		spark.Spark.get("/user/:userid", (req, res) -> {
 			int userId = Integer.valueOf(req.params(":userid"));
 			User user = userService.getUserById(userId);
+			addHeader(res);
 			return JSON.toJSON(user);
+		});
+
+		spark.Spark.get("/user/list", (req, res) -> {
+			Collection<User> users = userService.getUsers();
+			addHeader(res);
+			return JSON.toJSON(users);
 		});
 
 		spark.Spark.get("/hotel/:hotelid", (req, res) -> {
 			int hotelId = Integer.valueOf(req.params(":hotelid"));
 			Hotel hotel = hotelService.getHotelById(hotelId);
+			addHeader(res);
 			return JSON.toJSON(hotel);
 		});
 
+		spark.Spark.get("/hotel/list", (req, res) -> {
+			Collection<Hotel> hotels = hotelService.getHotels();
+			addHeader(res);
+			return JSON.toJSON(hotels);
+		});
+
+	}
+
+	private static void addHeader(Response response) {
+		response.header("Access-Control-Allow-Origin", "*");
+		response.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+		response.header("Access-Control-Allow-Headers", "Content-Type");
 	}
 }

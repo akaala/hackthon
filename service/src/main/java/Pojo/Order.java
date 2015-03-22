@@ -28,11 +28,7 @@ public class Order {
 
 	private Date dealTime;
 
-	// "inbid", "extrabid", "done";
 	private OrderStatus status;
-
-	// viewed list;
-	private Map<Integer, Hotel> viewedList = new HashMap<>();
 
 	// bid list:
 	private Map<Integer /* hotelid */, List<HotelBidRequest> /* price */> bidMap = new HashMap<>();
@@ -108,14 +104,6 @@ public class Order {
 
 	public void setStatus(OrderStatus status) {
 		this.status = status;
-	}
-
-	public Map<Integer, Hotel> getViewedList() {
-		return viewedList;
-	}
-
-	public void setViewedList(Map<Integer, Hotel> viewedList) {
-		this.viewedList = viewedList;
 	}
 
 	public void addHotelBidRequest(HotelBidRequest request) {

@@ -36,6 +36,12 @@ hotel/1
 用户详情
 user/1
 
+order/list
+
+hotel/list
+
+user/list
+
 
 
 
