@@ -32,7 +32,7 @@
 <!-- New Order page -->
 <div class="container-fluid middle-font" ng-controller="NewOrderController" ng-if="page==pages.NEW_ORDER" style="position:absolute;">
     <div class="row line-separator page-title">
-        <span class="pull-left">用户{{userId}} </span>我要出价
+        <span class="pull-left" ng-click="goto(pages.ORDER_LIST)" style="cursor:pointer; text-decoration: underline">用户{{userId}} </span>我要出价
     </div>
     <div class="row line-separator">
        <div class="col-xs-12">
