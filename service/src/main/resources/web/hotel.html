@@ -8,66 +8,108 @@
     <link rel="stylesheet" href="lib/bootstrap-3.3.4-dist/css/bootstrap.css">
     <link rel="stylesheet" href="lib/slider/css/slider.css">
     <link rel="stylesheet" href="common.css">
+
+    <link rel="stylesheet" href="jqcloud.min.css">
+
+    <script src="lib/jquery-2.1.3.min.js"></script>
+    <script src="lib/jqcloud.js"></script>
     <script src="lib/angular.js"></script>
-    <script src="lib/jquery-1.11.0.js"></script>
-    <script src="lib/slider/js/bootstrap-slider.js"></script>
+    <script src="js/angular-jqcloud.js"></script>
+    <script src="lib/pie-chart.min.js"></script>
+    <script src="lib/d3.min.js"></script>
+    <script src="lib/angular-strap.min.js"></script>
+    <script src="lib/angular-strap.tpl.min.js"></script>
+
     <script src="js/hotel.js"></script>
 </head>
 <body ng-controller="HotelCtrl">
 
 <div class="container-fluid" style="font-size: 25px">
-    <div ng-repeat="order in orders" class="row line-separator"
-         style="border: solid 1px #66ccbd; background-color: #E8F4FF; font-size: 20px">
-        <div class="col-md-4" style="border: dotted 1px #66ccbd; height: 160px;">
-            <div class="row">
-                订单信息：超時{{order.bidTimeout}}
-            </div>
-            <div class="row">
-                入住地点：{{order.location}}
-            </div>
-            <div class="row">
 
-                期望价格：{{order.price}}
-            </div>
+    <div ng-repeat="order in orders | orderBy: '-orderid'" class=" line-separator"
+         style="border: solid 1px #66ccbd; background-color: #E8F4FF; font-size: 20px;height: 160px;">
 
-            <div class="row">
-                期望星级：{{order.star}}
-            </div>
-            <div class="row">
-                期望类型：{{order.type}}
-            </div>
 
-        </div>
-        <div class="col-md-5" style="border: dotted 1px #66ccbd; height: 160px">
-            <div class="row">
-                用户性别：{{order.Gender}},
+        <div class="hotelrowtitle row">
+            <div class="col-md-2">
+                <span class="glyphicon  glyphicon-comment" aria-hidden="true"></span>
+                订单信息
             </div>
-            <div class="row">
-                竞标次数：{{order.userBidTimes}}
+            <div class="col-md-2">
+                <span class="glyphicon glyphicon-plane" aria-hidden="true"></span>
+                用户信息
             </div>
-            <div class="row">
-                回购次数：{{order.userBidReturnTimes}}
+            <div class="col-md-2">
+                <span class="glyphicon glyphicon-plane" aria-hidden="true"></span>
+                入住地点
             </div>
-            <div class="row">
-                消费潜力: 永远是高
+            <div class="col-md-2">
+                <span class="glyphicon  glyphicon-yen" aria-hidden="true"></span>
+                期望价格
+            </div>
+            <div class="col-md-2">
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                期望星级
+            </div>
+            <div class="col-md-2">
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                抢单操作
             </div>
         </div>
+        <div class="hotelrowtitle row">
+            <div class="col-md-2">
+                订单号ID-{{order.orderid}}, 超時{{order.bidTimeout}},
+            </div>
+            <div class="col-md-2" bs-collapse>
+                <span class="glyphicon glyphicon-plane" aria-hidden="true"></span>
+                <a bs-collapse-toggle>用户详情 </a>
 
-        <div class="col-md-3">
-            <div class="col-md-1 col-md-offset-8" style="margin-top: 10px;">
-                <button type="button" class="btn btn-lg btn-info " ng-click="getOrder(order)">抢单
+                <div class="panel-collapse" style="  display: block;"  bs-collapse-target>
+                      <!--  <jqcloud words="order.cloud" width="500" height="160" delay="10" steps="7"
+                                 font-size="{from:0.09, to:0.04}"></jqcloud>-->
+                  <!--      <pie-chart data="order.pieData" options="order.pieOption"></pie-chart>
+
+                        <pie-chart data="order.gaugeData" options="order.gaugeOption"></pie-chart>-->
+                </div>
+            </div>
+            <div class="col-md-2">
+                {{order.location}},
+            </div>
+            <div class="col-md-2">
+                {{order.price}},
+            </div>
+            <div class="col-md-2">
+                {{order.star}}  <span
+                          class="glyphicon glyphicon-star" aria-hidden="true"></span>
+            </div>
+            <div class="col-md-2" >
+                <button type="button" class="btn  btn-info " ng-click="getOrder(order.orderid)">抢单
+                </button>
+                <button type="button" class="btn btn-info " ng-click="getOrder(order.orderid)">加价
                 </button>
             </div>
-
-            <div class="input-group input-group-lg">
-                <input type="text" class="form-control input" placeholder="加价金额..." aria-describedby="basic-addon2">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-lg btn-info " ng-click=send()>加价
-                    </button>
-                     </span>
-            </div>
         </div>
+        <!-- <div class="hotlerow">
+glyphicon glyphicon-user
+             用户性别：{{order.Gender}},
+             <jqcloud words="order.cloud" width="500" height="160" delay="10" steps="7"
+                      font-size="{from:0.09, to:0.04}"></jqcloud>
+             <pie-chart data="order.pieData" options="order.pieOption"></pie-chart>
 
+             <pie-chart data="order.gaugeData" options="order.gaugeOption"></pie-chart>
+
+             <div class="col-md-1 col-md-offset-8" style="margin-top: 10px;padding-left: 30px">
+                 <button type="button" class="btn btn-lg btn-info " ng-click="getOrder(order.orderid)">抢单
+                 </button>
+             </div>
+             <div class="input-group input-group-lg">
+                 <input type="text" class="form-control input" placeholder="加价金额..." aria-describedby="basic-addon2">
+                 <span class="input-group-btn">
+                     <button type="submit" class="btn btn-lg btn-info " ng-click=send()>加价
+                     </button>
+                      </span>
+             </div>
+         </div>-->
     </div>
 </div>
 </div>

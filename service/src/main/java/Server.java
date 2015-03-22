@@ -22,6 +22,7 @@ import Pojo.User;
 import Pojo.UserBidRequest;
 
 import com.alibaba.fastjson.JSON;
+import spark.Response;
 
 public class Server {
 	public static void main(String[] args) {
@@ -59,6 +60,8 @@ public class Server {
 			   userService.addUserOrder(userId, order);
 
 			   order = orderService.userBid(order);
+
+			addHeader(res);
 			   return JSON.toJSON(order);
 		   });
 
@@ -77,6 +80,7 @@ public class Server {
 			request.setHotel(hotel);
 			Order order = orderService.getOrder(orderId);
 			HotelBidRequest hotelBid = orderService.hotelBid(request, order);
+			addHeader(res);
 			return JSON.toJSON(hotelBid);
 		});
 
@@ -87,6 +91,7 @@ public class Server {
 			int orderId = Integer.valueOf(req.queryParams("orderid"));
 			int hotelBidId = Integer.valueOf(req.queryParams("hotelbidid"));
 			Order order = orderService.confirmOrderBid(orderId, hotelBidId);
+			addHeader(res);
 			return JSON.toJSON(order);
 		});
 
@@ -105,6 +110,7 @@ public class Server {
 
 			   double normalPrice = service.getNormalPrice(request);
 			   List<PricePoint> prices = service.getPricePoint(normalPrice, timeoutMin, new Date());
+			addHeader(res);
 			   return JSON.toJSON(prices);
 		   });
 
@@ -114,6 +120,8 @@ public class Server {
 		spark.Spark.get("/user/orders", (req, res) -> {
 			int userId = Integer.valueOf(req.queryParams("userid"));
 			List<Order> orders = userService.getUserOrders(userId);
+			addHeader(res);
+
 			return JSON.toJSON(orders);
 		});
 
@@ -125,6 +133,7 @@ public class Server {
 			int hotelId = Integer.valueOf(req.queryParams("hotelid"));
 
 			List<Order> orders = orderService.getMatchedOrders(hotelId);
+			addHeader(res);
 			return JSON.toJSON(orders);
 		});
 
@@ -134,20 +143,29 @@ public class Server {
 		spark.Spark.get("/order/:orderid", (req, res) -> {
 			int orderId = Integer.valueOf(req.params(":orderid"));
 			Order order = orderService.getOrder(orderId);
+			addHeader(res);
 			return JSON.toJSON(order);
 		});
 
 		spark.Spark.get("/user/:userid", (req, res) -> {
 			int userId = Integer.valueOf(req.params(":userid"));
 			User user = userService.getUserById(userId);
+			addHeader(res);
 			return JSON.toJSON(user);
 		});
 
 		spark.Spark.get("/hotel/:hotelid", (req, res) -> {
 			int hotelId = Integer.valueOf(req.params(":hotelid"));
 			Hotel hotel = hotelService.getHotelById(hotelId);
+			addHeader(res);
 			return JSON.toJSON(hotel);
 		});
 
+	}
+
+	private static void addHeader(Response response) {
+		response.header("Access-Control-Allow-Origin", "*");
+		response.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+		response.header("Access-Control-Allow-Headers", "Content-Type");
 	}
 }
