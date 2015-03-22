@@ -257,16 +257,14 @@ mobileModule.controller('OrderListController', function ($rootScope, $scope, $ht
     $scope.init();
 
     $scope.openOrder = function(order) {
-        if (order.status == '进行中') {
+        if (order.status == 'inbid') {
             $rootScope.goto(PAGES.ORDER_DASHBOARD);
-        } else if (order.status == "还价中") {
+        } else if (order.status == "extrabid") {
             // TODO a hotel with a defiend price
-        } else if (order.status == "已完成") {
+        } else if (order.status == "done") {
             $rootScope.goto(PAGES.ORDER_DETAIL);
         }
     }
-
-
 });
 
 mobileModule.controller('OrderDashboardController', function ($rootScope, $scope, $http) {
@@ -289,5 +287,10 @@ mobileModule.controller('OrderDashboardController', function ($rootScope, $scope
 
     }
 
-    $scope.init();
+    $scope.init()
+
+    $scope.gotoOrderList = function () {
+        $("#allMap").remove();
+        $rootScope.goto(PAGES.ORDER_LIST);
+    }
 });

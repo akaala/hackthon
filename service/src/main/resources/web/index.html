@@ -144,6 +144,7 @@
         <span class="label label-danger" ng-if="currentOrder.status=='inbid'">竞标中。已有 {{nBids}} 家酒店出价。</span>
         <span class="label label-success" ng-if="currentOrder.status=='done'">已完成</span>
         <span class="label label-info" ng-if="currentOrder.status=='extrabid'">议价中</span>
+        <button type="button" class="btn btn-primary" ng-click="gotoOrderList()">出价历史</button>
     </div>
 
     <div class="row">
