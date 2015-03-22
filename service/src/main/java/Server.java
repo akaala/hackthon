@@ -1,21 +1,12 @@
-import Pojo.Order;
-
-import com.alibaba.fastjson.JSON;
-
-import service.HotelService;
-import service.BidService;
-import service.PriceService;
-import service.UserService;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import service.BidService;
 import service.HotelService;
 import service.PriceService;
 import service.UserService;
+import spark.Response;
 import Pojo.Hotel;
 import Pojo.HotelBidRequest;
 import Pojo.Order;
@@ -25,7 +16,6 @@ import Pojo.User;
 import Pojo.UserBidRequest;
 
 import com.alibaba.fastjson.JSON;
-import spark.Response;
 
 public class Server {
 	public static void main(String[] args) {
