@@ -141,7 +141,7 @@
 <div id="allMap"></div>
 <div class="container-fluid middle-font" ng-controller="OrderDashboardController" ng-show="(page==pages.ORDER_DASHBOARD) && currentOrder">
     <div class="row middle-line">
-        <span class="label label-danger" ng-if="currentOrder.status=='inbid'">竞标中。已有 {{nBids}} 家酒店出价。</span>
+        <span class="label label-danger" ng-if="currentOrder.status=='inbid'">竞标中。已有 {{nBids}} 家酒店出价。<span>倒计时：{{currentOrder.countDown}} 秒</span></span>
         <span class="label label-success" ng-if="currentOrder.status=='done'">已完成</span>
         <span class="label label-info" ng-if="currentOrder.status=='extrabid'">议价中</span>
         <button type="button" class="btn btn-primary" ng-click="gotoOrderList()">出价历史</button>

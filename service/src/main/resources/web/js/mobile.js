@@ -50,6 +50,7 @@ mobileModule.controller('RootController', function ($rootScope, $scope, $http, $
 
             $http.get(RESTFUL_API + "/order/" + $rootScope.currentOrder.orderid).success(function(data) {
                 $rootScope.currentOrder = data;
+                $rootScope.currentOrder.countDown = Math.floor((($rootScope.currentOrder.createTime + $rootScope.currentOrder.expiretime * 60000) - (new Date()).getTime())/1000);
                 currentOrder = data;
                 $rootScope.nBids = 0;
                 console.log("result of refresh map. order: ", data);
