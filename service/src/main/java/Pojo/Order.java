@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class Order {
 	public enum OrderStatus {
-		inbid, extrabid, done
+		inbid, extrabid, success, fail
 	}
 
 	private int orderid;
@@ -59,7 +59,7 @@ public class Order {
 		this.winningBid = winningBid;
 		this.dealPrice = this.getHotelRequest().getPrice() + winningBid.getExtraPrice();
 		this.dealTime = new Date();
-		this.status = OrderStatus.done;
+		this.status = OrderStatus.success;
 	}
 
 	public UserBidRequest getHotelRequest() {
