@@ -11,16 +11,33 @@
 }
 
 .hotlerow {
-    height: 20px;
+    box-shadow: 6px 6px 10px #DDD;
+    height: 300px;
+    padding: 10px;
+    border: 1px solid #CECECE;
 }
 
+.hotelrowtitle {
+    height: 30px;
+    font-size: 18px;
+    background-color: #f5f5f5;
+    margin-bottom: 5px;
+}
 
+.hotelinforow {
+    height: 200px;
+    font-size: 18px;
+    margin-bottom: 5px;
+    vertical-align: baseline;
+}
 .middle-line {
-    height: 80px
+    height: 80px;
+    padding: 20px 0px 0px 0px
 }
 
 .line-separator {
     border-bottom: lightgrey 1px solid;
+    padding: 20px 0px 0px 0px;
 }
 
 .no-border {

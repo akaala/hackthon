@@ -3,16 +3,19 @@
  */
 
 var RestUrl = "http://10.16.52.103:4567";
-var HotelId = 2;
+
 
 var hotelModule = angular.module('Hotel', ['angular-jqcloud', 'n3-pie-chart','mgcrea.ngStrap']);
 
-function newOrder(orderid, bidTimeout, location, price, star, type,
+
+
+function newOrder(orderid, status,bidTimeout, location, price, star, type,
                   userName, userBidTimes, userBidReturnTimes,
                   income, birth, userGender,
                   createTime, dealPrice, expiretime, extraBidTimeout, cloud,
                   pieOption, pieData, gaugeOption, gaugeData) {
     this.orderid = orderid;
+    this.status = status;
     this.bidTimeout = bidTimeout;
     this.location = location;
     this.price = price;
@@ -33,25 +36,30 @@ function newOrder(orderid, bidTimeout, location, price, star, type,
     this.pieData = pieData;
     this.gaugeOption = gaugeOption;
     this.gaugeData = gaugeData;
+    this.isCollapsed = true;
 }
 
 
 hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http) {
+    var HotelId = Math.ceil(Math.random()*5);
+
+    $scope.HotelId = HotelId;
+
     $scope.orders = []
     $http.get(RestUrl + "/hotel/orders" + "?hotelid=" + HotelId)
         .success(function (data, status, headers, config) {
 
             for (var i = 0; i < data.length; i++) {
-                //console.log(data);
                 var d = data[i];
-                var cloud = buildCloud();
-                var pieOption = {thickness: 40};
-                var pieData = buildPieData();
+                console.log(d);
+                var cloud = buildCloud(d.user.tags);
+                var pieOption = {thickness: 20};
+                var pieData = buildPieData(d.user.favorites);
 
                 var gaugeOption =  {thickness: 20, mode: "gauge", total: 100};
-                var gaugeDate = buildGaugeData();
+                var gaugeDate = buildGaugeData(d.user.bidThanOthers);
 
-                $scope.orders.push(new newOrder(d.orderid, d.bidTimeout, d.hotelRequest.location, d.hotelRequest.price,
+                $scope.orders.push(new newOrder(d.orderid, buildStatus(d.status), d.bidTimeout, d.hotelRequest.location, d.hotelRequest.price,
                     d.hotelRequest.star, d.hotelRequest.type, d.user.name, d.user.bidTimes, d.user.bidReturnTimes,
                     d.user.income, d.user.birth,
                     d.user.gender, d.createTime, d.dealPrice, d.expiretime, d.extraBidTimeout, cloud,
@@ -61,35 +69,67 @@ hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http) {
         });
 
 
-    $scope.getOrder = function (orderId) {
+    $scope.getOrder = function (orderId, add) {
+        alert(orderId + ":" + add)
         $http.get(RestUrl + "/order/hotelbid" + "?hotelid=" + HotelId + "&orderid=" + orderId
-        + "&extra=" + $scope.addPrice + "&comment=" + "No comment Now!");
+        + "&extra=" + add + "&comment=" + "No comment Now!");
     }
 
     $scope.addPrice = 0;
 
-    var buildCloud = function () {
-        return [{text: "Lorem", weight: 13},
-            {text: "Ipsum", weight: 10.5},
-            {text: "Dolor", weight: 9.4},
-            {text: "Sit", weight: 8},
-            {text: "Amet", weight: 6.2},
-            {text: "Consectetur", weight: 5},
-            {text: "Adipiscing", weight: 5},
-            {text: "Elit", weight: 5}]
+
+
+    var buildCloud = function (tags) {
+        var t = [];
+        for ( var p in tags ) {
+            var data ={};
+            data.text =p;
+            data.weight = tags[p];
+            t.push(data);
+        }
+        return t;
     }
 
-    var buildPieData = function() {
+    var buildPieData = function(tags) {
+        var t = [];
+        var i = 1;
+        for ( var p in tags) {
+            var data ={};
+            data.label =p;
+            data.value = tags[p];
+
+            if (i ==1) {
+                data.color = "#1f77b4"
+
+            } else if (i ==2) {
+                data.color =  "#ff7f0e"
+
+            } else {
+                data.color =  "#2ca02c"
+
+            }
+            i++
+            t.push(data);
+        }
+        return t;
+    }
+
+    var buildStatus = function(s) {
+        if (s == "inbid") {
+            return "竞价中"
+        } else if (s == "extra") {
+            return "议价中"
+        } else if (s == "success") {
+            return "成交"
+        } else if (s == "fail") {
+            return "流单"
+        }
+    }
+    var buildGaugeData = function (data) {
         return [
-            {label: "One", value: 11, color: "#1f77b4"},
-            {label: "Two", value: 22, color: "#ff7f0e"},
-            {label: "Three", value: 33, color: "#2ca02c"}
+            {label: "忠诚度超过其他用户比例", value: (data *100).toFixed(2), color: "#d62728", suffix: "%"}
         ];
     }
 
-    var buildGaugeData = function () {
-        return [
-            {label: "比其他用户忠诚", value: 78, color: "#d62728", suffix: "%"}
-        ];
-    }
+
 });

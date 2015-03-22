@@ -8,15 +8,78 @@ var PAGES = {
     ORDER_LIST: "orderList",
     ORDER_DASHBOARD: "orderDashboard",
     ORDER_DETAIL: "orderDetail;"
-}
+};
+var LOCATIONS = [ {name: "上海-徐家汇", x: 31.0930, y: 121.2651}, {name: "上海-虹桥", x:31.1153, y:121.2011},
+    {name:"上海-人民广场", x:31.1339, y:121.2820}];
+var REFRESH_INTEVAL_MILLISECONDS = 1000;
 
-mobileModule.controller('RootController', function ($rootScope, $scope, $http) {
+mobileModule.controller('RootController', function ($rootScope, $scope, $http, $interval) {
     $rootScope.pages = PAGES;
     $rootScope.page = PAGES.NEW_ORDER;
+
+    // Refresh map periodically
+    $interval ( function ( )
+    {
+        if ($scope.map && $rootScope.currentOrder && $rootScope.currentOrder.status == 'inbid' && $rootScope.page == PAGES.ORDER_DASHBOARD) {
+            console.log("Refreshing map with order: ", $rootScope.currentOrder);
+
+            $http.get(RESTFUL_API + "/order/" + $rootScope.currentOrder.orderid).success(function(data) {
+                $rootScope.currentOrder = data;
+                $rootScope.nBids = 0;
+                console.log("result of refresh map. order: ", data);
+                $rootScope.map.clearOverlays();
+                for (var hotelId in $rootScope.currentOrder.bidMap) {
+                    var hotel = $rootScope.currentOrder.bidMap[hotelId];
+                    var bid = hotel[hotel.length - 1];
+                    var point = new BMap.Point( bid.hotel.lng, bid.hotel.lat);
+
+                    $rootScope.nBids++;
+                    // DEBUG
+                    console.log("add marker at: ", bid.hotel.lng, bid.hotel.lat, " nbids: ", $rootScope.nBids);
+
+                    var marker = new BMap.Marker(point);  //创建标注
+                    $rootScope.map.addOverlay(marker);
+
+                    var infoWindow1 = new BMap.InfoWindow("出价: " + ($rootScope.currentOrder.hotelRequest.price + bid.extraPrice) + " 元。" +
+                        "<button class='btn btn-default' onclick='javascript:void(0);'>就住这家！</button>");
+                    marker.addEventListener("click", function(){this.openInfoWindow(infoWindow1);});
+                }
+            });
+
+            $scope.title = "竞价中:";
+        } else if ($rootScope.currentOrder && $rootScope.currentOrder.status == 'done') {
+            $scope.title = "已成交：" + $rootScope.currentOrder.winningBid.location
+                + "，成交价: " + $rootScope.currentOrder.dealPrice + " 元";
+        }
+    } , REFRESH_INTEVAL_MILLISECONDS );
 
     $rootScope.goto = function(page) {
         $rootScope.page = page;
     }
+
+    // Create map for the first time
+    $rootScope.createMap = function() {
+        if ($rootScope.currentOrder)
+        {
+            var map = new BMap.Map("allMap");           // 创建Map实例
+            var locationReq = $rootScope.currentOrder.hotelRequest.location;
+            var location = null;
+            for (var i = 0; i < LOCATIONS.length; i++) {
+                if (locationReq == LOCATIONS[i].name) {
+                    location = LOCATIONS[i];
+                    break;
+                }
+            }
+            // var point = new BMap.Point(116.404, 39.915);
+            console.log("center map at: ", location.y, location.x);
+            var point = new BMap.Point(location.y, location.x);
+            map.centerAndZoom(point,12);                 // 初始化地图,设置中心点坐标和地图级别。
+            map.addControl(new BMap.ZoomControl());      //添加地图缩放控件
+            $rootScope.map = map;
+        }
+    }
+
+
 });
 
 mobileModule.controller('NewOrderController', function ($rootScope, $scope, $http) {
@@ -24,21 +87,22 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
     $scope.sendOrder = function()
     {
         // http://10.16.52.103:4567/order/buy?userid=1&price=300&star=5&place=上海-浦东&type=1
-        $http.get(RESTFUL_API + "/order/buy",
+        $http.get(RESTFUL_API + "/order/userbid",
             {
                 params:
                 {
                     userid: USER_ID,
                     star: $scope.star.id,
-                    place: $scope.location,
+                    place: $scope.location.name,
                     type: $scope.type,
                     timeout: $scope.expire,
                     price: $scope.bidPrice
                 }
             }).success(function(data) {
                 var order = data;
-                $rootScope.currentOrderInDashboard = order;
+                $rootScope.currentOrder = order;
                 $rootScope.goto(PAGES.ORDER_DASHBOARD);
+                $rootScope.createMap();
                 console.log("result of send order. order id: ", order);
             });
     }
@@ -53,7 +117,7 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
             {
                 userid: USER_ID,
                 star: $scope.star.id,
-                place: $scope.location,
+                place: $scope.location.name,
                 type: $scope.type,
                 timeout: $scope.expire
             }
@@ -85,9 +149,35 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
         });
     }
 
+    $scope.initDates = function() {
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+        var checkin = $('#dpd1').datepicker({
+            onRender: function(date) {
+                return date.valueOf() < now.valueOf() ? 'disabled' : '';
+            }
+        }).on('changeDate', function(ev) {
+                if (ev.date.valueOf() > checkout.date.valueOf()) {
+                    var newDate = new Date(ev.date)
+                    newDate.setDate(newDate.getDate() + 1);
+                    checkout.setValue(newDate);
+                }
+                checkin.hide();
+                $('#dpd2')[0].focus();
+            }).data('datepicker');
+        var checkout = $('#dpd2').datepicker({
+            onRender: function(date) {
+                return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+            }
+        }).on('changeDate', function(ev) {
+                checkout.hide();
+            }).data('datepicker');
+    }
+
     $scope.init = function() {
         // index.html
-        $scope.locations = [ "上海 - 浦东新区", "上海 - 长宁区" ];
+        $scope.locations = LOCATIONS;
         $scope.location = $scope.locations[0];
         $scope.stars = [ {id: 1, name: "二星级以下"}, {id: 2, name: "二星级"}, {id: 3, name: "三星级"}, {id: 4, name: "四星级"}, {id: 5, name: "五星级"}];
         $scope.star = $scope.stars[0];
@@ -95,6 +185,8 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
         $scope.type = 1;
         $scope.expire = 3;
         $scope.probabilities = {};
+
+        $scope.initDates();
 
         $scope.bidPrice = 10;
         $('#price-slider').slider({min: 10, max: 5000, step: 10,
@@ -126,4 +218,12 @@ mobileModule.controller('OrderListController', function ($rootScope, $scope, $ht
             $rootScope.goto(PAGES.ORDER_DETAIL);
         }
     }
+});
+
+mobileModule.controller('OrderDashboardController', function ($rootScope, $scope, $http) {
+    $scope.init = function() {
+
+    }
+
+    $scope.init();
 });
