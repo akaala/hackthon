@@ -7,10 +7,11 @@
     <!--link rel="stylesheet" href="css/app.css"-->
     <link rel="stylesheet" href="lib/bootstrap-3.3.4-dist/css/bootstrap.css">
     <link rel="stylesheet" href="lib/slider/css/slider.css">
+    <link rel="stylesheet" href="lib/datepicker/css/datepicker.css"/>
     <link rel="stylesheet" href="common.css">
 
     <style type="text/css">
-        body, html,#allMap {width: 100%;height: 100%; margin:0;}
+       #allMap {width: 100%;height: 1000px; margin:0;}
         #golist {display: none;}
         @media (max-device-width: 780px){#golist{display: block !important;}}
     </style>
@@ -18,6 +19,7 @@
     <script src="lib/angular.js"></script>
     <script src="lib/jquery-1.11.0.js"></script>
     <script src="lib/slider/js/bootstrap-slider.js"></script>
+    <script src="lib/datepicker/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=Lkh4Go82L7yZ0G8Pj2wqYm6s&v=1.0"></script>
 
     <script src="js/data-load.js"></script>
@@ -27,21 +29,20 @@
 <body ng-controller="RootController">
 
 <!-- New Order page -->
-<div class="container-fluid middle-font" ng-controller="NewOrderController" ng-if="page==pages.NEW_ORDER">
+<div class="container-fluid middle-font" ng-controller="NewOrderController" ng-if="page==pages.NEW_ORDER" style="position:absolute;">
     <div class="row line-separator page-title">
         我要出价
     </div>
     <div class="row line-separator">
-       <div class="col-xs-5">
-            <input type="text" class="form-control middle-font middle-line" id="start-time" placeholder="2015-3-21"
-                      style="color:black; border:none;" ng-click="refreshBidRange()">
-        </div>
-        <div class="col-xs-2">
-            <span class="glyphicon glyphicon-chevron-right middle-font middle-line">&nbsp;</span>
-        </div>
-        <div class="col-xs-5">
-            <input type="text" class="form-control middle-font middle-line" id="end-time" placeholder="2015-3-25"
-                   style="color:black; border:none;" ng-click="refreshBidRange()">
+       <div class="col-xs-12">
+           <table class="table">
+               <thead>
+               <tr>
+                   <th>入住: <input type="text" class="span2 no-border" value="" id="dpd1"></th>
+                   <th>退房: <input type="text" class="span2 no-border" value="" id="dpd2"></th>
+               </tr>
+               </thead>
+           </table>
         </div>
     </div>
     <div class="row line-separator">
@@ -110,7 +111,7 @@
             {{order.date | date:"yyyy-MM-dd"}}
         </div>
         <div class="col-xs-2">
-            <button class='btn middle-font' ng-class="{true: 'btn-danger', false: 'btn-success'}[order.status=='进行中']" ng-click="openOrder(order)">{{order.status}}</button>
+            <button class='btn middle-font' ng-class="{true: 'btn-danger', false: 'btn-success'}[order.status=='inbid']" ng-click="openOrder(order)">{{order.status}}</button>
         </div>
         <div class="col-xs-3">
             {{order.finalPrice}} 元
@@ -122,11 +123,13 @@
 </div>
 
 <!-- Order list page-->
-<div id="allMap">
-</div>
-<div class="container-fluid middle-font" ng-controller="OrderDashboardController" ng-show="(page==pages.ORDER_DASHBOARD) && currentOrderInDashboard">
-    aaaaa
-
+<div id="allMap"></div>
+<div class="container-fluid middle-font" ng-controller="OrderDashboardController" ng-show="(page==pages.ORDER_DASHBOARD) && currentOrder">
+    <div class="row middle-line">
+        <span class="label label-danger" ng-if="currentOrder.status=='inbid'">竞标中。已有 {{nBids}} 家酒店出价。</span>
+        <span class="label label-success" ng-if="currentOrder.status=='done'">已完成</span>
+        <span class="label label-info" ng-if="currentOrder.status=='extrabid'">议价中</span>
+    </div>
 </div>
 
 </body>
