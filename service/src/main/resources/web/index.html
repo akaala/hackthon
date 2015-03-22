@@ -131,7 +131,7 @@
             {{order.dealPrice}} 元
         </div>
         <div class="col-xs-4">
-            {{order.winningBid.hotel.name}}
+            <a ng-href="{{order.winningBid.hotel.url}}" ng-if="order.winningBid" target="_blank">{{order.winningBid.hotel.name}}</a>
         </div>
     </div>
 
