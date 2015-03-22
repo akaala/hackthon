@@ -1,7 +1,7 @@
 /**
  * Created by hyj on 15-3-21.
  */
-var RESTFUL_API = "http://10.16.52.103:4567";
+var RESTFUL_API = "http://192.168.255.57:4567";
 var USER_ID = Math.floor((Math.random() * 10) % 5 + 1);
 var PAGES = {
     NEW_ORDER: "newOrder",
@@ -16,22 +16,38 @@ var currentOrder;
 
 function showOrderConfirmDialog(hotelId)
 {
-    console.log("show order confirm dialog");
-    $("#orderConfirmDialog").modal({
-        backdrop:false,
-        keyboard:true,
-        show:true}
-    );
-
-    if (!currentOrder.bidMap || !currentOrder.bidMap[hotelId])
+    var digest = true;
+    var bid = currentOrder.bestLosingBid;
+    if (bid) {
+        digest = false;
+    }
+    else if (currentOrder.bidMap) {
+        var hotel = currentOrder.bidMap[hotelId];
+        if (hotel)
+        {
+            bid = hotel[hotel.length - 1];
+        }
+    }
+    if (!bid)
         return;
 
+    currentOrder.status = "confirming";
+
+    $("#orderConfirmDialog").modal({
+            backdrop:false,
+            keyboard:true,
+            show:true}
+    );
+
     var scope = angular.element($("#orderConfirmDialog")).scope();
-    scope.$apply(function(){
-        var hotel = currentOrder.bidMap[hotelId];
-        scope.bidToConfirm = hotel[hotel.length - 1];
-        console.log("bid to confirm: ", scope.bidToConfirm);
-    })
+    if (!digest) {
+        scope.bidToConfirm = bid;
+    } else {
+        scope.$apply(function(){
+            scope.bidToConfirm = bid;
+            console.log("bid to confirm: ", scope.bidToConfirm);
+        })
+    }
 }
 
 mobileModule.controller('RootController', function ($rootScope, $scope, $http, $interval) {
@@ -45,12 +61,15 @@ mobileModule.controller('RootController', function ($rootScope, $scope, $http, $
     // Refresh map periodically
     $interval ( function ( )
     {
-        if ($scope.map && $rootScope.currentOrder && $rootScope.currentOrder.status == 'inbid' && $rootScope.page == PAGES.ORDER_DASHBOARD) {
+        if ($scope.map && currentOrder && $rootScope.currentOrder.status == 'inbid' && $rootScope.page == PAGES.ORDER_DASHBOARD) {
             console.log("Refreshing map with order: ", $rootScope.currentOrder);
 
             $http.get(RESTFUL_API + "/order/" + $rootScope.currentOrder.orderid).success(function(data) {
                 $rootScope.currentOrder = data;
                 $rootScope.currentOrder.countDown = Math.floor((($rootScope.currentOrder.createTime + $rootScope.currentOrder.expiretime * 60000) - (new Date()).getTime())/1000);
+                if ($rootScope.currentOrder.countDown < 0) {
+                    $rootScope.currentOrder.countDown = 0;
+                }
                 currentOrder = data;
                 $rootScope.nBids = 0;
                 console.log("result of refresh map. order: ", data);
@@ -70,16 +89,28 @@ mobileModule.controller('RootController', function ($rootScope, $scope, $http, $
                     var infoWindow1 = new BMap.InfoWindow(bid.hotel.name + " 出价: " + ($rootScope.currentOrder.hotelRequest.price + bid.extraPrice) + " 元。" +
                     "<button class='btn btn-default' type='button' class='btn btn-primary' onclick='showOrderConfirmDialog("+hotelId+")'>就住这家！</button>");
                     marker.addEventListener("click", function(){this.openInfoWindow(infoWindow1);});
-
                 }
             });
 
             $scope.title = "竞价中:";
-        } else if ($rootScope.currentOrder && $rootScope.currentOrder.status == 'done') {
+        } else if (currentOrder && $rootScope.currentOrder.status == 'success') {
             $scope.title = "已成交：" + $rootScope.currentOrder.winningBid.location
                 + "，成交价: " + $rootScope.currentOrder.dealPrice + " 元";
+            $("#allMap").remove();
+            $rootScope.goto(PAGES.ORDER_LIST);
+            $rootScope.currentOrder = null;
+            currentOrder = null;
+        } else if (currentOrder && $rootScope.currentOrder.status == 'extrabid') { // todo change to extrabid
+            if ($rootScope.currentOrder.bestLosingBid) {
+                showOrderConfirmDialog($rootScope.currentOrder.bestLosingBid.hotel.hotelid);
+            }
+        } else if ($rootScope.currentOrder && $rootScope.currentOrder.status == 'fail') {
+            $("#allMap").remove();
+            $rootScope.goto(PAGES.ORDER_LIST);
+            $rootScope.currentOrder = null;
+            currentOrder = null;
         }
-    } , REFRESH_INTEVAL_MILLISECONDS );
+    }, REFRESH_INTEVAL_MILLISECONDS );
 
     $rootScope.goto = function(page) {
         $rootScope.page = page;
@@ -147,7 +178,7 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
                 userid: USER_ID,
                 star: $scope.star.id,
                 place: $scope.location.name,
-                type: $scope.type,
+                type: $scope.type.id,
                 timeout: $scope.expire
             }
         }).success(function(data) {
@@ -211,7 +242,7 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
         $scope.stars = [ {id: 1, name: "二星级以下"}, {id: 2, name: "二星级"}, {id: 3, name: "三星级"}, {id: 4, name: "四星级"}, {id: 5, name: "五星级"}];
         $scope.star = $scope.stars[0];
         $scope.types = [ {id: 1, name: "经济型"}, {id: 2, name: "商旅型"}];
-        $scope.type = 1;
+        $scope.type = $scope.types[0];
         $scope.expire = 3;
         $scope.probabilities = {};
 
