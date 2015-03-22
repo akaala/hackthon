@@ -146,11 +146,11 @@ public class Server {
 			return JSON.toJSON(order);
 		});
 
-		spark.Spark.get("/order/list", (req, res) -> {
-			Collection<Order> orders = orderService.getOrders();
-			addHeader(res);
-			return JSON.toJSON(orders);
-		});
+//		spark.Spark.get("/order", (req, res) -> {
+//			Collection<Order> orders = orderService.getOrders();
+//			addHeader(res);
+//			return JSON.toJSON(orders);
+//		});
 
 		spark.Spark.get("/user/:userid", (req, res) -> {
 			int userId = Integer.valueOf(req.params(":userid"));
@@ -159,11 +159,11 @@ public class Server {
 			return JSON.toJSON(user);
 		});
 
-		spark.Spark.get("/user/list", (req, res) -> {
-			Collection<User> users = userService.getUsers();
-			addHeader(res);
-			return JSON.toJSON(users);
-		});
+//		spark.Spark.get("/user", (req, res) -> {
+//			Collection<User> users = userService.getUsers();
+//			addHeader(res);
+//			return JSON.toJSON(users);
+//		});
 
 		spark.Spark.get("/hotel/:hotelid", (req, res) -> {
 			int hotelId = Integer.valueOf(req.params(":hotelid"));
@@ -172,11 +172,11 @@ public class Server {
 			return JSON.toJSON(hotel);
 		});
 
-		spark.Spark.get("/hotel/list", (req, res) -> {
-			Collection<Hotel> hotels = hotelService.getHotels();
-			addHeader(res);
-			return JSON.toJSON(hotels);
-		});
+//		spark.Spark.get("/hotel", (req, res) -> {
+//			Collection<Hotel> hotels = hotelService.getHotels();
+//			addHeader(res);
+//			return JSON.toJSON(hotels);
+//		});
 
 	}
 

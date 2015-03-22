@@ -2,7 +2,7 @@
  * Created by Administrator on 2015-3-21.
  */
 
-var RestUrl = "http://192.168.255.16:4567";
+var RestUrl = "http://192.168.255.57:4567";
 
 
 var hotelModule = angular.module('Hotel', ['angular-jqcloud', 'n3-pie-chart','mgcrea.ngStrap']);
@@ -65,7 +65,7 @@ hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http, $locati
     $scope.HotelId = Request['id']
 
     $scope.orders = []
-    $http.get(RestUrl + "/hotel/orders" + "?hotelid=" + HotelId)
+    $http.get(RestUrl + "/hotel/orders" + "?hotelid=" + $scope.HotelId)
         .success(function (data, status, headers, config) {
 
             for (var i = 0; i < data.length; i++) {
@@ -89,7 +89,7 @@ hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http, $locati
 
 
     $scope.getOrder = function (order) {
-        $http.get(RestUrl + "/order/hotelbid" + "?hotelid=" + HotelId + "&orderid=" + order.orderid
+        $http.get(RestUrl + "/order/hotelbid" + "?hotelid=" + $scope.HotelId + "&orderid=" + order.orderid
         + "&extra=" + order.addPrice + "&comment=" + "No comment Now!");
     }
 
@@ -145,7 +145,7 @@ hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http, $locati
     }
     var buildGaugeData = function (data) {
         return [
-            {label: "忠诚度超过其他用户比例", value: (data *100).toFixed(2), color: "#d62728", suffix: "%"}
+            {label: "竞拍参与度超过全国", value: (data *100).toFixed(2), color: "#d62728", suffix: "%"}
         ];
     }
 

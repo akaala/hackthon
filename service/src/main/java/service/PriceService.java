@@ -28,9 +28,15 @@ public class PriceService {
 		switch (request.getType()) {
 		case "商务型":
 			return base * 1.2;
+		case "2":
+			return base * 1.2;
 		case "经济型":
 			return base * 0.8;
+		case "1":
+			return base * 0.8;
 		case "度假型":
+			return base;
+		case "3":
 			return base;
 		default:
 			return base;

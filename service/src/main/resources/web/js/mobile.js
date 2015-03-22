@@ -1,7 +1,10 @@
 /**
  * Created by hyj on 15-3-21.
  */
-var RESTFUL_API = "http://192.168.255.16:4567";
+
+
+var RESTFUL_API = "http://192.168.255.57:4567";
+
 var USER_ID = Math.floor((Math.random() * 10) % 5 + 1);
 var PAGES = {
     NEW_ORDER: "newOrder",

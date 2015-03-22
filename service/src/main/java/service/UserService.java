@@ -53,7 +53,7 @@ public class UserService {
 	private void initData() {
 		BinomialDistribution distribution = new BinomialDistribution(10, 0.3);
 		String[] userNameArray = { "刘一鸣", "顾庆", "柯圣", "秦峰", "黄弋简" };
-		String[] birth = { "1981－1985", "1986-1990", "1991-1995", "1996-2000" };
+		String[] birth = { "1981-1985", "1986-1990", "1991-1995", "1996-2000" };
 		String[] gender = { "男", "女" };
 		String[] income = { "10万以下", "10-20万", "20-30万", "30万以上" };
 		String[] tags = { "红二代", "富二代", "不差钱", "抠门", "网购达人", "情侣酒店爱好者", "飞行达人" };

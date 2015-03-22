@@ -64,6 +64,11 @@ public class BidService {
 							if (order.isBidTimeout()) {
 								order.setStatus(OrderStatus.extrabid);
 								findBestLosingBid(order);
+								if(order.getBestLosingBid()==null){
+									order.setStatus(OrderStatus.fail);
+									orderCounts.get(OrderStatus.inbid).decrementAndGet();
+									orderCounts.get(OrderStatus.fail).incrementAndGet();
+								}
 								continue;
 							}
 						} else if (order.getStatus() == OrderStatus.extrabid) {
@@ -133,18 +138,18 @@ public class BidService {
 		for (Order order : orderMap.values()) {
 			UserBidRequest hotelRequest = order.getHotelRequest();
 			boolean isMatchLocation = hotelRequest.getLocation() != null ? true : false;
-			if (!isMatchLocation) {
+			if (isMatchLocation) {
 				isMatchLocation = hotelRequest.getLocation().equals(hotel.getLocation());
 			}
-			boolean isMatchType = hotelRequest.getType() != null ? true : false;
-			if (!isMatchType) {
-				isMatchType = hotelRequest.getType().equals(hotel.getType());
-			}
-			boolean isMatchStar = hotelRequest.getStar() != null ? true : false;
-			if (!isMatchStar) {
-				isMatchStar = hotelRequest.getStar().equals(hotel.getStar());
-			}
-			if (isMatchLocation && isMatchType && isMatchStar) {
+//			boolean isMatchType = hotelRequest.getType() != null ? true : false;
+//			if (isMatchType) {
+//				isMatchType = hotelRequest.getType().equals(hotel.getType());
+//			}
+//			boolean isMatchStar = hotelRequest.getStar() != null ? true : false;/
+//			if (isMatchStar) {
+//				isMatchStar = hotelRequest.getStar().equals(hotel.getStar());
+//			}
+			if (isMatchLocation) {
 				result.add(order);
 			}
 		}
