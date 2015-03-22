@@ -1,5 +1,6 @@
 package service;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -76,4 +77,8 @@ public class HotelService {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
+
+	public Collection<Hotel> getHotels() {
+		return hotelMap.values();
+   }
 }
