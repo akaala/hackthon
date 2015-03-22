@@ -12,9 +12,34 @@ var PAGES = {
 var LOCATIONS = [ {name: "上海-徐家汇", x: 31.0930, y: 121.2651}, {name: "上海-虹桥", x:31.1153, y:121.2011},
     {name:"上海-人民广场", x:31.1339, y:121.2820}];
 var REFRESH_INTEVAL_MILLISECONDS = 1000;
+var currentOrder;
+
+function showOrderConfirmDialog(hotelId)
+{
+    console.log("show order confirm dialog");
+    $("#orderConfirmDialog").modal({
+        backdrop:false,
+        keyboard:true,
+        show:true}
+    );
+
+    if (!currentOrder.bidMap || !currentOrder.bidMap[hotelId])
+        return;
+
+    var scope = angular.element($("#orderConfirmDialog")).scope();
+    scope.$apply(function(){
+        var hotel = currentOrder.bidMap[hotelId];
+        scope.bidToConfirm = hotel[hotel.length - 1];
+        console.log("bid to confirm: ", scope.bidToConfirm);
+    })
+}
 
 mobileModule.controller('RootController', function ($rootScope, $scope, $http, $interval) {
+    $rootScope.userId = USER_ID;
+
     $rootScope.pages = PAGES;
+
+    // Set initial page
     $rootScope.page = PAGES.NEW_ORDER;
 
     // Refresh map periodically
@@ -25,6 +50,7 @@ mobileModule.controller('RootController', function ($rootScope, $scope, $http, $
 
             $http.get(RESTFUL_API + "/order/" + $rootScope.currentOrder.orderid).success(function(data) {
                 $rootScope.currentOrder = data;
+                currentOrder = data;
                 $rootScope.nBids = 0;
                 console.log("result of refresh map. order: ", data);
                 $rootScope.map.clearOverlays();
@@ -40,9 +66,10 @@ mobileModule.controller('RootController', function ($rootScope, $scope, $http, $
                     var marker = new BMap.Marker(point);  //创建标注
                     $rootScope.map.addOverlay(marker);
 
-                    var infoWindow1 = new BMap.InfoWindow("出价: " + ($rootScope.currentOrder.hotelRequest.price + bid.extraPrice) + " 元。" +
-                        "<button class='btn btn-default' onclick='javascript:void(0);'>就住这家！</button>");
+                    var infoWindow1 = new BMap.InfoWindow(bid.hotel.name + " 出价: " + ($rootScope.currentOrder.hotelRequest.price + bid.extraPrice) + " 元。" +
+                    "<button class='btn btn-default' type='button' class='btn btn-primary' onclick='showOrderConfirmDialog("+hotelId+")'>就住这家！</button>");
                     marker.addEventListener("click", function(){this.openInfoWindow(infoWindow1);});
+
                 }
             });
 
@@ -100,6 +127,7 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
                 }
             }).success(function(data) {
                 var order = data;
+                currentOrder = order;
                 $rootScope.currentOrder = order;
                 $rootScope.goto(PAGES.ORDER_DASHBOARD);
                 $rootScope.createMap();
@@ -138,7 +166,7 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
             parent.append("<div id='price-slider'></div>")
 
             $scope.bidPrice = min;
-            $('#price-slider').slider({min: min, max: max, step: step,
+            $('#price-slider').slider({min: min, max: max, step: step, value: 0.8*max,
                 orientation: "horizontal", handle: "round"}).on('slide', function(ev){
                     console.log("price is ", ev.value);
                     $scope.bidPrice = ev.value;
@@ -189,12 +217,18 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
         $scope.initDates();
 
         $scope.bidPrice = 10;
-        $('#price-slider').slider({min: 10, max: 5000, step: 10,
+        $('#price-slider').slider({min: 10, max: 5000, step: 10, value: 4800,
             orientation: "horizontal", handle: "round"}).on('slide', function(ev){
                 console.log("price is ", ev.value);
                 $scope.bidPrice = ev.value;
                 $scope.$apply();
             });
+
+        $http.get(RESTFUL_API + "/order/counts").success(function(data) {
+            console.log("stats:", data);
+
+            $scope.stats = data;
+        });
     };
 
     $scope.init();
@@ -202,28 +236,69 @@ mobileModule.controller('NewOrderController', function ($rootScope, $scope, $htt
 
 mobileModule.controller('OrderListController', function ($rootScope, $scope, $http) {
     $scope.init = function() {
-        $scope.orderHistory =
-            [{date: new Date(), status: "进行中", finalPrice: "1200", hotel: "银行大酒店"}
-            ,{date: new Date(), status: "完成", finalPrice: "1200", hotel: "银行大酒店"}];
+        $http.get(RESTFUL_API + "/user/orders",
+            {
+                params:
+                {
+                    userid: USER_ID
+                }
+            }).success(function(data) {
+                console.log("order list loaded: ", data);
+                $scope.orderHistory = data;
+                for (var i = 0; i < data.length; i++)
+                {
+                    var order = data[i];
+                    order.date = new Date(order.createTime);
+                    if (order.status ==  "success") {
+                        order.cstatus = "已成交";
+                    } else if (order.status == "fail") {
+                        order.cstatus = "已流单";
+                    } else if (order.status == "inbid") {
+                        order.cstatus = "竞价中";
+                    } else if (order.status == "extrabid") {
+                        order.cstatus = "议价中";
+                    }
+                }
+            });
     }
 
     $scope.init();
 
     $scope.openOrder = function(order) {
-        if (order.status == '进行中') {
+        if (order.status == 'inbid') {
             $rootScope.goto(PAGES.ORDER_DASHBOARD);
-        } else if (order.status == "还价中") {
+        } else if (order.status == "extrabid") {
             // TODO a hotel with a defiend price
-        } else if (order.status == "已完成") {
+        } else if (order.status == "done") {
             $rootScope.goto(PAGES.ORDER_DETAIL);
         }
     }
 });
 
 mobileModule.controller('OrderDashboardController', function ($rootScope, $scope, $http) {
+    $scope.confirmOrder = function(bid) {
+        $http.get(RESTFUL_API + "/order/confirm",
+            {
+                params:
+                {
+                    orderid: $scope.currentOrder.orderid,
+                    hotelbidid: bid.bidId
+                }
+            }).success(function(data) {
+                console.log("result of confirm order. order id: ", data);
+                $("#allMap").remove();
+                $rootScope.goto(PAGES.ORDER_LIST);
+            });
+    }
+
     $scope.init = function() {
 
     }
 
-    $scope.init();
+    $scope.init()
+
+    $scope.gotoOrderList = function () {
+        $("#allMap").remove();
+        $rootScope.goto(PAGES.ORDER_LIST);
+    }
 });

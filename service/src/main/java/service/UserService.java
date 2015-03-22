@@ -1,5 +1,6 @@
 package service;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,4 +77,8 @@ public class UserService {
 			userMap.put(user.getUserid(), user);
 		}
 	}
+
+	public Collection<User> getUsers() {
+		return userMap.values();
+   }
 }
