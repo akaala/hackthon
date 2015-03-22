@@ -18,6 +18,7 @@
 
     <script src="lib/angular.js"></script>
     <script src="lib/jquery-1.11.0.js"></script>
+    <script src="lib/bootstrap-3.3.4-dist/js/bootstrap.js"></script>
     <script src="lib/slider/js/bootstrap-slider.js"></script>
     <script src="lib/datepicker/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=Lkh4Go82L7yZ0G8Pj2wqYm6s&v=1.0"></script>
@@ -31,7 +32,7 @@
 <!-- New Order page -->
 <div class="container-fluid middle-font" ng-controller="NewOrderController" ng-if="page==pages.NEW_ORDER" style="position:absolute;">
     <div class="row line-separator page-title">
-        我要出价
+        <span class="pull-left" ng-click="goto(pages.ORDER_LIST)" style="cursor:pointer; text-decoration: underline">用户{{userId}} </span>我要出价
     </div>
     <div class="row line-separator">
        <div class="col-xs-12">
@@ -86,51 +87,79 @@
         <div class="col-xs-3">
             我愿意出价：
         </div>
-        <div  class="col-xs-4">
+        <div  class="col-xs-3">
             <div id="price-slider" style="width: 100%">
                 &nbsp;
             </div>
         </div>
-        <div class="col-xs-4" >
+        <div class="col-xs-6" >
             <span style="color: orangered; font-weight: bold">{{bidPrice}}</span> 元
-            <span ng-if="probabilities[bidPrice]">成功率：{{probabilities[bidPrice]}} %</span>
+            <span ng-if="probabilities[bidPrice]">成交概率：{{probabilities[bidPrice]}} %</span>
         </div>
     </div>
     <div class="row line-separator" style="text-align: center">
         <button class="btn btn-danger middle-font no-border" ng-click="sendOrder()" style="width:30%">出价</button>
+    </div>
+
+    <div class="row line-separator" style="text-align: center">
+        <span class="label label-success" style="margin-right: 15px">
+            累计成交：{{stats.success}}
+        </span>
+        <span class="label label-warning" style="margin-right: 15px">
+            累计竞标中：{{stats.inbid}}
+        </span>
+        <span class="label label-default" style="margin-right: 15px">
+            累计流单：{{stats.fail}}
+        </span>
+
     </div>
 </div>
 
 <!-- Order list page-->
 <div class="container-fluid middle-font" ng-controller="OrderListController" ng-if="page==pages.ORDER_LIST">
     <div class="row line-separator page-title">
-        竞标历史
+        <span class="pull-left" >用户{{userId}} </span>出价历史
     </div>
     <div class="row line-separator" ng-repeat="order in orderHistory">
-        <div class="col-xs-3">
-            {{order.date | date:"yyyy-MM-dd"}}
+        <div class="col-xs-4" style="font-size:20px">
+            {{order.date | date:"yyyy-MM-dd hh:mm:ss"}}
         </div>
         <div class="col-xs-2">
-            <button class='btn middle-font' ng-class="{true: 'btn-danger', false: 'btn-success'}[order.status=='inbid']" ng-click="openOrder(order)">{{order.status}}</button>
+            <button class='btn middle-font' ng-class="{true: 'btn-success'}[order.cstatus=='已成交']" ng-click="openOrder(order)">{{order.cstatus}}</button>
         </div>
-        <div class="col-xs-3">
-            {{order.finalPrice}} 元
+        <div class="col-xs-2">
+            {{order.dealPrice}} 元
         </div>
-        <div class="col-xs-5">
-            {{order.hotelName}}
+        <div class="col-xs-4">
+            {{order.winningBid.hotel.name}}
         </div>
     </div>
+
 </div>
 
-<!-- Order list page-->
+<!-- Order dashboard age-->
 <div id="allMap"></div>
 <div class="container-fluid middle-font" ng-controller="OrderDashboardController" ng-show="(page==pages.ORDER_DASHBOARD) && currentOrder">
     <div class="row middle-line">
         <span class="label label-danger" ng-if="currentOrder.status=='inbid'">竞标中。已有 {{nBids}} 家酒店出价。</span>
         <span class="label label-success" ng-if="currentOrder.status=='done'">已完成</span>
         <span class="label label-info" ng-if="currentOrder.status=='extrabid'">议价中</span>
+        <button type="button" class="btn btn-primary" ng-click="gotoOrderList()">出价历史</button>
+    </div>
+
+    <div class="row">
+        <div class="modal" id="orderConfirmDialog">
+            <div class="modal-body" style="background-color: wheat">
+                <span>确定入住？</span>
+                <span>{{bidToConfirm.hotel.name}}</span>
+                <span style="font-weight:bold; color: orangered ">{{bidToConfirm.extraPrice + currentOrder.hotelRequest.price}} 元</span>
+                <button class="btn middle-font btn-primary" ng-click="confirmOrder(bidToConfirm)">确定</button>
+            </div>
+        </div>
     </div>
 </div>
+
+<!--current page: {{page}}-->
 
 </body>
 </html>

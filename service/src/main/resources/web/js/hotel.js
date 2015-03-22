@@ -7,8 +7,6 @@ var RestUrl = "http://10.16.52.103:4567";
 
 var hotelModule = angular.module('Hotel', ['angular-jqcloud', 'n3-pie-chart','mgcrea.ngStrap']);
 
-
-
 function newOrder(orderid, status,bidTimeout, location, price, star, type,
                   userName, userBidTimes, userBidReturnTimes,
                   income, birth, userGender,
@@ -37,11 +35,13 @@ function newOrder(orderid, status,bidTimeout, location, price, star, type,
     this.gaugeOption = gaugeOption;
     this.gaugeData = gaugeData;
     this.isCollapsed = true;
+    this.addPrice = 0;
 }
 
 
 hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http) {
     var HotelId = Math.ceil(Math.random()*5);
+
 
     $scope.HotelId = HotelId;
 
@@ -69,10 +69,9 @@ hotelModule.controller('HotelCtrl', function ($rootScope, $scope, $http) {
         });
 
 
-    $scope.getOrder = function (orderId, add) {
-        alert(orderId + ":" + add)
-        $http.get(RestUrl + "/order/hotelbid" + "?hotelid=" + HotelId + "&orderid=" + orderId
-        + "&extra=" + add + "&comment=" + "No comment Now!");
+    $scope.getOrder = function (order) {
+        $http.get(RestUrl + "/order/hotelbid" + "?hotelid=" + HotelId + "&orderid=" + order.orderid
+        + "&extra=" + order.addPrice + "&comment=" + "No comment Now!");
     }
 
     $scope.addPrice = 0;
