@@ -9,6 +9,8 @@ import service.UserService;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import service.BidService;
 import service.HotelService;
@@ -17,6 +19,7 @@ import service.UserService;
 import Pojo.Hotel;
 import Pojo.HotelBidRequest;
 import Pojo.Order;
+import Pojo.Order.OrderStatus;
 import Pojo.PricePoint;
 import Pojo.User;
 import Pojo.UserBidRequest;
@@ -72,7 +75,7 @@ public class Server {
 			String comment = req.queryParams("comment");
 
 			Hotel hotel = hotelService.getHotelById(hotelId);
-			
+
 			HotelBidRequest request = new HotelBidRequest();
 			request.setComment(comment);
 			request.setExtraPrice(extra);
@@ -93,6 +96,11 @@ public class Server {
 			Order order = orderService.confirmOrderBid(orderId, hotelBidId);
 			addHeader(res);
 			return JSON.toJSON(order);
+		});
+
+		spark.Spark.get("/order/counts", (req, res) -> {
+			Map<OrderStatus, Integer> orderCounts = orderService.getOrderCounts();
+			return JSON.toJSON(orderCounts);
 		});
 
 		// show bid history and 概率

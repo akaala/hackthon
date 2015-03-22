@@ -18,7 +18,11 @@ public class User {
 
 	private Map<String, Integer> tags = new HashMap<>();
 
+	private Map<String, Integer> favorites = new HashMap<>();
+
 	private int bidTimes;
+	
+	private double bidThanOthers;
 
 	private int bidReturnTimes;
 
@@ -89,4 +93,20 @@ public class User {
 	public void setTags(Map<String, Integer> tags) {
 		this.tags = tags;
 	}
+
+	public Map<String, Integer> getFavorites() {
+	   return favorites;
+   }
+
+	public void setFavorites(Map<String, Integer> favorites) {
+	   this.favorites = favorites;
+   }
+
+	public double getBidThanOthers() {
+	   return bidThanOthers;
+   }
+
+	public void setBidThanOthers(double bidThanOthers) {
+	   this.bidThanOthers = bidThanOthers;
+   }
 }

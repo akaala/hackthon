@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.commons.math3.distribution.BinomialDistribution;
+
 import Pojo.Order;
 import Pojo.User;
+
 import com.google.common.collect.ArrayListMultimap;
 
 /**
@@ -47,6 +50,7 @@ public class UserService {
 	}
 
 	private void initData() {
+		BinomialDistribution distribution = new BinomialDistribution(10, 0.3);
 		String[] userNameArray = { "刘一鸣", "顾庆", "柯圣", "秦峰", "黄弋简" };
 		String[] birth = { "1981－1985", "1986-1990", "1991-1995", "1996-2000" };
 		String[] gender = { "男", "女" };
@@ -65,6 +69,10 @@ public class UserService {
 			for (int j = 0; j < 5; j++) {
 				user.getTags().put(tags[random.nextInt(tags.length)], random.nextInt(10));
 			}
+			user.getFavorites().put("经济型", random.nextInt(20));
+			user.getFavorites().put("商务型", random.nextInt(10));
+			user.getFavorites().put("休闲型", random.nextInt(5));
+			user.setBidThanOthers(distribution.cumulativeProbability(user.getBidTimes()));
 			userMap.put(user.getUserid(), user);
 		}
 	}
