@@ -64,10 +64,8 @@ public class BidService {
 							if (order.isBidTimeout()) {
 								order.setStatus(OrderStatus.extrabid);
 								findBestLosingBid(order);
-								if(order.getBestLosingBid()==null){
+								if (order.getBestLosingBid() == null) {
 									order.setStatus(OrderStatus.fail);
-									orderCounts.get(OrderStatus.inbid).decrementAndGet();
-									orderCounts.get(OrderStatus.fail).incrementAndGet();
 								}
 								continue;
 							}
@@ -141,14 +139,14 @@ public class BidService {
 			if (isMatchLocation) {
 				isMatchLocation = hotelRequest.getLocation().equals(hotel.getLocation());
 			}
-//			boolean isMatchType = hotelRequest.getType() != null ? true : false;
-//			if (isMatchType) {
-//				isMatchType = hotelRequest.getType().equals(hotel.getType());
-//			}
-//			boolean isMatchStar = hotelRequest.getStar() != null ? true : false;/
-//			if (isMatchStar) {
-//				isMatchStar = hotelRequest.getStar().equals(hotel.getStar());
-//			}
+			// boolean isMatchType = hotelRequest.getType() != null ? true : false;
+			// if (isMatchType) {
+			// isMatchType = hotelRequest.getType().equals(hotel.getType());
+			// }
+			// boolean isMatchStar = hotelRequest.getStar() != null ? true : false;/
+			// if (isMatchStar) {
+			// isMatchStar = hotelRequest.getStar().equals(hotel.getStar());
+			// }
 			if (isMatchLocation) {
 				result.add(order);
 			}
@@ -180,5 +178,5 @@ public class BidService {
 
 	public Collection<Order> getOrders() {
 		return orderMap.values();
-   }
+	}
 }

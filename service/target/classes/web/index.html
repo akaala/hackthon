@@ -64,9 +64,9 @@
     </div>
     <div class="row line-separator">
         <div class="col-xs-12">
-            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[type==1]" ng-click="type=1;refreshBidRange();">经济型</button>
-            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[type==2]" ng-click="type=2;refreshBidRange();">商旅型</button>
-            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[type==3]" ng-click="type=3;refreshBidRange();">度假型</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[type.id==1]" ng-click="type=types[0];refreshBidRange();">经济型</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[type.id==2]" ng-click="type=types[1];refreshBidRange();">商旅型</button>
+            <button class="btn middle-font no-border" ng-class="{true: 'btn-primary', false: 'btn-default'}[type.id==3]" ng-click="type=types[2];refreshBidRange();">度假型</button>
         </div>
     </div>
     <div class="row line-separator">
